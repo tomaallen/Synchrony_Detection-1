@@ -37,6 +37,7 @@ Open an anaconda propt and type:
 Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyse and line 58 --output with the folder path where you want to store the results.
 Run the script by typing in the anaconda prompt:
 
-
+## 3. Create the Json Combined file
+scrivi domani
 
 
