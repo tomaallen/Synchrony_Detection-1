@@ -34,10 +34,15 @@ Open an anaconda propt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd C:\Users\isabellasole.bisio\Desktop\Synchrony_Detection\2_Reaching-Detection\src` <br><br>
 
-Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyse and line 58 --output with the folder path where you want to store the results.
+Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyze and line 58 --output with the folder path where you want to store the results.
 Run the script by typing in the anaconda prompt:
 
 ## 3. Create the Json Combined file
-scrivi domani
+### Copy csv Face
+- Go inside _C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined_ and open _copy_csv_face.py_
+- Edit the following:<br><br>
+1. _--input_ place here the path of the folder containing all the Face Detection output, ex. Y:\Synchronised_trimmed_videos_STT\Face_detect_output\Baby_cam. <br>
+Inside the last folder of the path, there MUST all the participant folders 
+- `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
 
 
