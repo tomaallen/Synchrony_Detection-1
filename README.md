@@ -17,7 +17,7 @@ The video files **MUST** be named in the following way (if they are not the algo
 <br><br> Example: BLBR001_SyncCam, LP004_BabyCam, Bangladesh012_SyncCam. etc.
 
 ## 1. Face Detection 
-Open a terminal and type:
+Open an Anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd C:\Users\isabellasole.bisio\Desktop\SynchronyDetection\1_FaceDetection` <br><br>
 - `jupyter notebook` <br><br>
@@ -39,10 +39,42 @@ Run the script by typing in the anaconda prompt:
 
 ## 3. Create the Json Combined file
 ### Copy csv Face
-- Go inside _C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined_ and open _copy_csv_face.py_
+- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\json_combined_ and open _copy_csv_face.py_
 - Edit the following:<br><br>
-1. _--input_ place here the path of the folder containing all the Face Detection output, ex. Y:\Synchronised_trimmed_videos_STT\Face_detect_output\Baby_cam. <br>
-Inside the last folder of the path, there MUST all the participant folders 
-- `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
+1. _--input_ copy here the path of the folder containing all the Face Detection output, ex. _Y:\Synchronised_trimmed_videos_STT\Face_detect_output\Baby_cam_. <br>
+Note that nside the last folder of the path (in this example _Baby_cam_), there MUST all the participant folders <br><br>
+2. _--output_ copy here the path of the Pose Detection Output, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam _ <br><br>
+3. Edit _csv_face_folder_ such that the algorithm will be able to extract only the name of the participant (ex. BLBR006) and discard the rest.
+- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
+- `python copy_csv_face.py` <br><br>
+
+### Combine Face Detection and Body Pose Outputs 
+- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\json_combined_ and open _2_z_per_frame_id__use_yolo_face.py_
+- Edit the following:<br><br>
+_--reach_dir_ copy here the path of the Pose Detection output with csv face, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_
+- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
+- `python 2_z_per_frame_id__use_yolo_face.py` <br><br>
+
+### Run analysis plots
+- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ and open _run_analysis_plots.py_
+- Edit the following:<br><br>
+1. _--PCI_dir_ copy here the path of the PCI Analysis Folder, ex. _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ <br><br>
+2. _--reach_dir_ copy here the path of the folder containing the Pose Detection outputs, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_ <br><br>
+3. _participant_name_ adapt it to the name of the files <br><br>
+- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\3_PCI-Analysis` <br><br>
+- `python run_analysis_plots.py` <br><br>
+
+### Run analysis parameters
+- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ and open _run_analysis_parameters.py_
+- Edit the following:<br><br>
+1. _--PCI_dir_ copy here the path of the PCI Analysis Folder, ex. _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ <br><br>
+2. _--reach_dir_ copy here the path of the folder containing the Pose Detection outputs, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_ <br><br>
+3. _participant_name_ adapt it to the name of the files <br><br>
+- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\3_PCI-Analysis` <br><br>
+- `python run_analysis_parameters.py` <br><br>
+
+
+
+
 
 
