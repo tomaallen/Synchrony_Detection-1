@@ -19,7 +19,7 @@ The video files **MUST** be named in the following way (if they are not the algo
 ## 1. Face Detection 
 Open an Anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd C:\Users\isabellasole.bisio\Desktop\SynchronyDetection\1_FaceDetection` <br><br>
+- `cd C:\Users\youruser\Desktop\SynchronyDetection\1_FaceDetection` <br><br>
 - `jupyter notebook` <br><br>
 
 Open **Automate_face_pose_script_conda_env.ipynb** and edit: 
@@ -32,7 +32,7 @@ Run the script and wait for the results to be saved.
 ### Notice that you can 2. in parallel with 1.
 Open an anaconda propt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd C:\Users\isabellasole.bisio\Desktop\Synchrony_Detection\2_Reaching-Detection\src` <br><br>
+- `cd C:\Users\youruser\Desktop\Synchrony_Detection\2_Reaching-Detection\src` <br><br>
 
 Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyze and line 58 --output with the folder path where you want to store the results.
 Run the script by typing in the anaconda prompt:
@@ -44,7 +44,7 @@ Run the script by typing in the anaconda prompt:
 1. _--input_ copy here the path of the folder containing all the Face Detection output, ex. _Y:\Synchronised_trimmed_videos_STT\Face_detect_output\Baby_cam_. <br>
 Note that nside the last folder of the path (in this example _Baby_cam_), there MUST all the participant folders <br><br>
 2. _--output_ copy here the path of the Pose Detection Output, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam _ <br><br>
-3. Edit _csv_face_folder_ such that the algorithm will be able to extract only the name of the participant (ex. BLBR006) and discard the rest.
+3. Edit _csv_face_folder_ such that the algorithm will be able to extract only the name of the participant (ex. BLBR006) and discard the rest. Check the participant folders name in Pose detection outputs.
 - Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
 - `python copy_csv_face.py` <br><br>
 
