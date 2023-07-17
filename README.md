@@ -70,6 +70,7 @@ _--reach_dir_ copy here the path of the Pose Detection output with csv face, ex.
 3. _participant_name_ adapt it to the name of the files <br><br>
 - Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\3_PCI-Analysis` <br><br>
 - `python run_analysis_parameters.py` <br><br>
+- The final output will be a .csv file containing the analysis results for each dataset used as input.
 
 
 
