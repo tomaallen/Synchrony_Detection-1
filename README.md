@@ -35,7 +35,7 @@ Open an anaconda propt and type:
 Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyze and line 58 --output with the folder path where you want to store the results.
 Run the script by typing in the anaconda prompt:
 
-## 3. Create the Json Combined file
+## 3a. Create the Json Combined file
 ### Copy csv Face
 - Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\json_combined_ and open _copy_csv_face.py_
 - Edit the following:<br><br>
@@ -53,6 +53,7 @@ _--reach_dir_ copy here the path of the Pose Detection output with csv face, ex.
 - Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
 - `python 2_z_per_frame_id__use_yolo_face.py` <br><br>
 
+## 3b. PCI Analysis
 ### Run analysis plots
 - Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ and open _run_analysis_plots.py_
 - Edit the following:<br><br>
