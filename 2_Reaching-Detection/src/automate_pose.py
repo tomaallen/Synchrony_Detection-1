@@ -13,11 +13,11 @@ if __name__ == '__main__':
     my_parser.add_argument('--folder',
                            type=str,
                            help='the folder containing both face_detect_output and pose_detect_output',
-                           default=r'E:\\AnB_Pose_interaction_phase')
+                           default=r'')
     my_parser.add_argument('--model_path',
                            type=str,
                            help='path of detect_face.py',
-                           default=r"C:\\Users\\bllca\\Synchrony_Detection\\2_Reaching-Detection\\src\\main.py") # XXX: important path
+                           default=r"main.py") # XXX: important path
     
     # TODO: add video fps as an argument here
 
