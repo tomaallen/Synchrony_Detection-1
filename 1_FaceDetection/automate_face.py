@@ -17,7 +17,7 @@ if __name__ == '__main__':
     my_parser.add_argument('--model_path',
                            type=str,
                            help='path of detect_face.py',
-                           default=r'C:\\Users\\bllca\\Synchrony_Detection_streamline\\1_FaceDetection\\detect_face.py')
+                           default=r'detect_face.py')
     
     # TODO: add video fps as an argument here
 
