@@ -1,41 +1,27 @@
 # Synchrony_Detection
 
-## Notes
-I will create a branch of the GitHub repo with the following changes:
-- removing .pt model files which are too large - save these on OneDrive instead
-- update requirements.txt to give a single environment capable of running face and pose detection with gpu enabled
-- add automation files which work with a flat file structure - delete the old automation files
-- add combined analysis folder to replace json_combined and PCI_analysis folders
-- update yolo_py_path and yolo_weight path in detect_face.py so they do not have to be changed everytime
+# To Do in new fork:
+- clean up RD/src of excess files
 
-Additional future changes I want to make to the GitHub repository:
-- removing example files from yolo and pose detection folders
-- add optional pre-processing step 0 to rename files and flatten folder structure
+- check gitattribute and gitignore files
+	- check with local git etc.
+	- need to clear up handling of .dll files
+	- if you can get it into a local repo then rename 2_Reaching-Detection to 2_PoseDetection
 
 
 ## Installation
 1. Install Anaconda
-1. **Download** the GitHub repository Synchrony_Detection from https://github.com/isabella-sole/Synchrony_Detection
-	- Edit detect_face.py
-		- line 98: default yolo_py_path = 'yolov7-main\\detect.py'
-		- line 100: default yolo_weight_path = 'yolov7-main\\best.pt'
-		- NOTE: I will change this is the GitHub repo new branch
-	- Add the additional files for automation
-		- Link: https://universityofcambridgecloud-my.sharepoint.com/:f:/r/personal/ta536_cam_ac_uk/Documents/LEAP%20Cambridge%20Shared/Pose_Synchrony/Code?csf=1&web=1&e=2kSQBx
-		- Add automate_face.py to 1_FaceDetection and automate_pose.py to 2_ReachingDetection\src
-		- Download CombinedAnalysis folder and delete PCI_analysis and json combined
-		- This README and requirements.txt go in Synchrony_Detection and replace the old files
-		- NOTE: I will add all of these to a branch of the GitHub repo at a later date so you will be able to skip this step
+1. **Download** the GitHub repository Synchrony_Detection from my new fork
 1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive
 	- if different version of cuda used you will need to change pytorch version in requirements.txt
 	- using pytorch>2.0 will result in face_detection using cpu only on windows
 	- you should not need cudnn as it is included in openpose binaries for windows (but I have it installed anyway)
 1. Create an environment e.g. named synchrony_detection
-	- MUST INSTALL PYTHON V3.7.**16**
-	- `conda create -n synchrony_detection python==3.7.16` <br><br>
-	- `pip install -r {your path}\SynchronyDetection\requirements.txt` (the new file from OneDrive)
-1. Download best.pt and traced_model.pt and add to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder - replace existing files
-	- Note: I will remove the existing .pt files from the GitHub repo as they are no good
+	- MUST INSTALL PYTHON V3.7.16
+	- `conda create -n synchrony_detection python==3.7.16`
+	- `conda activate synchrony_detection`
+	- `pip install -r {your path}\SynchronyDetection\requirements.txt`
+1. Download best.pt and add to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder (available to download on OneDrive)
 1. Download openpose gpu version from https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases and save to local drive
 1. Download 3rd party for 2021 and models from here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
 	- unzip all, including subfolders e.g. using 7-zip
