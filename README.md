@@ -1,80 +1,88 @@
 # Synchrony_Detection
 
+## Notes
+I will create a branch of the GitHub repo with the following changes:
+- removing .pt model files which are too large - save these on OneDrive instead
+- update requirements.txt to give a single environment capable of running face and pose detection with gpu enabled
+- add automation files which work with a flat file structure - delete the old automation files
+- add combined analysis folder to replace json_combined and PCI_analysis folders
+- update yolo_py_path and yolo_weight path in detect_face.py so they do not have to be changed everytime
+
+Additional future changes I want to make to the GitHub repository:
+- removing example files from yolo and pose detection folders
+- add optional pre-processing step 0 to rename files and flatten folder structure
+
+
 ## Installation
-Once downloaded the code, install the required packages and create an anaconda environment
+1. Install Anaconda
+1. **Download** the GitHub repository Synchrony_Detection from https://github.com/isabella-sole/Synchrony_Detection
+	- Edit detect_face.py
+		- line 98: default yolo_py_path = 'yolov7-main\\detect.py'
+		- line 100: default yolo_weight_path = 'yolov7-main\\best.pt'
+		- NOTE: I will change this is the GitHub repo new branch
+	- Add the additional files for automation
+		- Link: https://universityofcambridgecloud-my.sharepoint.com/:f:/r/personal/ta536_cam_ac_uk/Documents/LEAP%20Cambridge%20Shared/Pose_Synchrony/Code?csf=1&web=1&e=2kSQBx
+		- Add automate_face.py to 1_FaceDetection and automate_pose.py to 2_ReachingDetection\src
+		- Download CombinedAnalysis folder and delete PCI_analysis and json combined
+		- This README and requirements.txt go in Synchrony_Detection and replace the old files
+		- NOTE: I will add all of these to a branch of the GitHub repo at a later date so you will be able to skip this step
+1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive
+	- if different version of cuda used you will need to change pytorch version in requirements.txt
+	- using pytorch>2.0 will result in face_detection using cpu only on windows
+	- you should not need cudnn as it is included in openpose binaries for windows (but I have it installed anyway)
+1. Create an environment e.g. named synchrony_detection
+	- MUST INSTALL PYTHON V3.7.**16**
+	- `conda create -n synchrony_detection python==3.7.16` <br><br>
+	- `pip install -r {your path}\SynchronyDetection\requirements.txt` (the new file from OneDrive)
+1. Download best.pt and traced_model.pt and add to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder - replace existing files
+	- Note: I will remove the existing .pt files from the GitHub repo as they are no good
+1. Download openpose gpu version from https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases and save to local drive
+1. Download 3rd party for 2021 and models from here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
+	- unzip all, including subfolders e.g. using 7-zip
+	- add these downloads to respective folders in openpose download
+1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2-Reaching_Detection
+	- Replace any existing files
+
 
 ## Data Preparation 
 ### Trim Videos
 Trim the videos to obtain only the required portion (STT task, PCI task, etc.)
 
 ### Files Location and Naming Constraint
-Create three folders (**SyncCam** **BabyCam** **MomCam**). <br><br>
-Store each recording that you want to analyze inside one of these folders, depending on the POV you are using. <br><br>
-The video files **MUST** be named in the following way (otherwise the algorithm will not work):
-- Location identifier and participant number + Underscore **_** + Camera used
+Videos should be stored in a single flat folder. Naming of files should **include participant names at the least** in order to combine outputs from multiple cameras at the end of analysis. 
 <br><br> Example: BLBR001_SyncCam, LP004_BabyCam, Bangladesh012_SyncCam. etc.
 
-## 1. Face Detection 
-Open an Anaconda terminal and type:
-- `conda activate synchrony_detection` <br><br>
-- `cd C:\Users\youruser\Desktop\SynchronyDetection\1_FaceDetection` <br><br>
-- `jupyter notebook` <br><br>
 
-Open **Automate_face_pose_script_conda_env.ipynb** and edit: 
-- **folder_path** with the path of the **To_analsyse** folder
-- **save_path** with the path of the folder where you want to store the results
+## Running Analysis
+
+## 1. Face Detection 
+Open an anaconda terminal and type:
+- `conda activate synchrony_detection` <br><br>
+- `cd {your path}\SynchronyDetection\1_FaceDetection` <br><br>
+- `python automate_face.py --folder {your analysis folder}`
 
 Run the script and wait for the results to be saved.
 
 ## 2. Reaching Detection
 ### Notice that this section can run in parallel with section 1.
-Open an anaconda propt and type:
+Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd C:\Users\youruser\Desktop\Synchrony_Detection\2_Reaching-Detection\src` <br><br>
+- `cd {your path}\SynchronyDetection\2_Reaching-Detection\src` <br><br>
+- `python automate_pose.py --folder {your analysis folder}`
 
-Open the script **main.py** and edit at line 54 --input with the path of the folder containing the videos you want to analyze and line 58 --output with the folder path where you want to store the results.
-Run the script by typing in the anaconda prompt:
+Run the script and wait for the results to be saved.
 
-## 3a. Create the Json Combined file
-### Copy csv Face
-- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\json_combined_ and open _copy_csv_face.py_
-- Edit the following:<br><br>
-1. _--input_ copy here the path of the folder containing all the Face Detection output, ex. _Y:\Synchronised_trimmed_videos_STT\Face_detect_output\Baby_cam_. <br>
-Note that nside the last folder of the path (in this example _Baby_cam_), there MUST all the participant folders <br><br>
-2. _--output_ copy here the path of the Pose Detection Output, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam _ <br><br>
-3. Edit _csv_face_folder_ such that the algorithm will be able to extract only the name of the participant (ex. BLBR006) and discard the rest. Check the participant folders name in Pose detection outputs.
-- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
-- `python copy_csv_face.py` <br><br>
+## 3. Combined Analysis
+The combined analysis script does three things
+1. Copies the face csv file to the pose output folder
+1. Generates a combined json file in the pose output folder
+1. Runs cross-correlation model 1.0 by calling file_input_run_plots and file_input_run_parameters
+	- **This could be adapted to use newer models**
 
-### Combine Face Detection and Body Pose Outputs 
-- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\json_combined_ and open _2_z_per_frame_id__use_yolo_face.py_
-- Edit the following:<br><br>
-_--reach_dir_ copy here the path of the Pose Detection output with csv face, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_
-- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\json_combined` <br><br>
-- `python 2_z_per_frame_id__use_yolo_face.py` <br><br>
+To run the combined analysis, open a new anaconda prompt and type:
+- `conda activate synchrony_detection` <br><br>
+- `cd {your path}\Combined_Analysis` <br><br>
+- `python combined_analysis.py --folder {your analysis folder}`
 
-## 3b. PCI Analysis
-### Run analysis plots
-- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ and open _run_analysis_plots.py_
-- Edit the following:<br><br>
-1. _--PCI_dir_ copy here the path of the PCI Analysis Folder, ex. _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ <br><br>
-2. _--reach_dir_ copy here the path of the folder containing the Pose Detection outputs, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_ <br><br>
-3. _participant_name_ adapt it to the name of the files <br><br>
-- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\3_PCI-Analysis` <br><br>
-- `python run_analysis_plots.py` <br><br>
-
-### Run analysis parameters
-- Go inside _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ and open _run_analysis_parameters.py_
-- Edit the following:<br><br>
-1. _--PCI_dir_ copy here the path of the PCI Analysis Folder, ex. _C:\Users\youruser\Desktop\SynchronyAnalysis\3_PCI-Analysis_ <br><br>
-2. _--reach_dir_ copy here the path of the folder containing the Pose Detection outputs, ex. _Y:\Synchronised_trimmed_videos_STT\Pose_detect_output\Baby_Cam_ <br><br>
-3. _participant_name_ adapt it to the name of the files <br><br>
-- Save the script and run the Anaconda terminal and type `cd C:\Users\labadmin\Desktop\SynchronyAnalysis-Upload\3_PCI-Analysis` <br><br>
-- `python run_analysis_parameters.py` <br><br>
-- The final output will be a .csv file containing the analysis results for each dataset used as input.
-
-
-
-
-
-
+Results are saved to cross_corr_output\combined_results.csv
+Information about whether each step of analysis has run can be found in analysis_info\analysis_info.csv
