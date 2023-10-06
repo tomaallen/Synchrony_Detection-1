@@ -33,8 +33,9 @@ if __name__ == '__main__':
         os.mkdir(save_path)
         
     # clear runs directory of previous unfinished analysis
-    shutil.rmtree(os.path.join(os.path.dirname(opt.model_path), 'runs'))
-    print(os.path.join(os.path.dirname(opt.model_path), 'runs') + ' cleared')
+    if os.path.exists(os.path.join(os.path.dirname(opt.model_path), 'runs')):
+        shutil.rmtree(os.path.join(os.path.dirname(opt.model_path), 'runs'))
+        print(os.path.join(os.path.dirname(opt.model_path), 'runs') + ' cleared')
     
     # for sub_path in os.listdir(PATH):
     #     if sub_path.endswith('.mp4'):
