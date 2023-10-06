@@ -1,6 +1,0 @@
-opencv-python
-pygame
-scipy
-pykalman
-tensorflow
-numba
