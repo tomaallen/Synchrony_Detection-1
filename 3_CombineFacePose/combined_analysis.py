@@ -92,7 +92,7 @@ if __name__ == '__main__':
                 
                 # create combined json
                 if not os.path.exists(combined_json_path):
-                    command = 'python file_input_2_z_per_frame_id__use_yolo_face.py --reach_dir ' \
+                    command = 'python create_combined_json.py --reach_dir ' \
                         + os.path.join(pose_path, vid)
                     print(shlex.split(command, posix = 0))
                     subprocess.check_call(shlex.split(command, posix = 0))
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                 
                 # run analysis plots and parameters
                 if not os.path.exists(os.path.join(cross_corr_path, vid, vid + "-segmented_analysis.json")):
-                    command = 'python file_input_run_analysis_plots.py --PCI_dir ' + cross_corr_path \
+                    command = 'python run_analysis_plots.py --PCI_dir ' + cross_corr_path \
                         + ' --reach_dir ' + os.path.join(pose_path, vid) \
                             + ' --plot_on False' \
                                 + ' --fps ' + str(args.fps) # default fps is 25 if unspecified
@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 
                 if plots_run: # plots must run first
                     if not os.path.exists(os.path.join(cross_corr_path, vid, vid + "-normalized_results.csv")):
-                        command = 'python file_input_run_analysis_parameters.py --PCI_dir ' \
+                        command = 'python run_analysis_parameters.py --PCI_dir ' \
                             + cross_corr_path + ' --reach_dir ' + os.path.join(pose_path, vid)
                         print(shlex.split(command, posix = 0))
                         subprocess.check_call(shlex.split(command, posix = 0))
