@@ -95,9 +95,9 @@ if __name__ == "__main__":
                         help='Where to save the yolo raw output?')
     parser.add_argument('-yolo_exp_name', default='', type=str,
                         help='Name the run, e.g., for LP006s video simply name it as "LP006", then a LP006.csv will be generate in txt_output_directory')
-    parser.add_argument('-yolo_py_path', default='C:\\Users\\labadmin\\Desktop\\SynchronyAnalysis-Upload\\1_FaceDetection\\yolov7-main\\detect.py', type=str,
+    parser.add_argument('-yolo_py_path', default='yolov7-main\\detect.py', type=str,
                         help='The path to detect.py from YoloV7 folder.')
-    parser.add_argument('-yolo_weight_path', default='C:\\Users\\labadmin\\Desktop\\SynchronyAnalysis-Upload\\1_FaceDetection\\yolov7-main\\best.pt', type=str,
+    parser.add_argument('-yolo_weight_path', default='yolov7-main\\best.pt', type=str,
                         help='The path to the yolov7 weight you want to load.')
 
     args = parser.parse_args()
