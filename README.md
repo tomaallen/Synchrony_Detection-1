@@ -1,6 +1,6 @@
 # Synchrony_Detection
 
-# To Do in new fork:
+## To Do in new fork:
 - clean up RD/src of excess files
 
 - check gitattribute and gitignore files
