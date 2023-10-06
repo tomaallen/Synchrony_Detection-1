@@ -37,16 +37,16 @@ if __name__ == '__main__':
         shutil.rmtree(os.path.join(os.path.dirname(opt.model_path), 'runs'))
         print(os.path.join(os.path.dirname(opt.model_path), 'runs') + ' cleared')
     
-    # for sub_path in os.listdir(PATH):
-    #     if sub_path.endswith('.mp4'):
-    #         sub_path_no_ext = os.path.splitext(sub_path)[0]
-    #         new_save_path = os.path.join(save_path, sub_path_no_ext)
-    #         # print(new_save_path)
-    #         if not os.path.isdir(new_save_path):
-    #             os.mkdir(new_save_path)
-    #             p_vid = os.path.join(PATH, sub_path)
-    #             command = 'python '+ model_path+ " " + '-input_path '+p_vid+' '+'-txt_output_directory '+new_save_path+' '+'-yolo_exp_name '+sub_path_no_ext
-    #             args = shlex.split(command, posix = 0)
-    #             print(args)
-    #             # print(command)
-    #             subprocess.call(args)
+    for sub_path in os.listdir(PATH):
+        if sub_path.endswith('.mp4'):
+            sub_path_no_ext = os.path.splitext(sub_path)[0]
+            new_save_path = os.path.join(save_path, sub_path_no_ext)
+            # print(new_save_path)
+            if not os.path.isdir(new_save_path):
+                os.mkdir(new_save_path)
+                p_vid = os.path.join(PATH, sub_path)
+                command = 'python '+ model_path+ " " + '-input_path '+p_vid+' '+'-txt_output_directory '+new_save_path+' '+'-yolo_exp_name '+sub_path_no_ext
+                args = shlex.split(command, posix = 0)
+                print(args)
+                # print(command)
+                subprocess.call(args)
