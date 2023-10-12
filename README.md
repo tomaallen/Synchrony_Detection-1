@@ -22,7 +22,7 @@
 	- MUST INSTALL PYTHON V3.7.16
 	- `conda create -n synchrony_detection python==3.7.16`
 	- `conda activate synchrony_detection`
-	- `pip install -r {your path}\SynchronyDetection\requirements.txt`
+	- `pip install -r {your path}\Synchrony_Detection\requirements.txt`
 1. Download best.pt and add to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder (available to download on OneDrive)
 1. Download openpose gpu version from https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases and save to local drive
 1. Download 3rd party for 2021 and models from here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
@@ -46,7 +46,7 @@ Videos should be stored in a single flat folder. Naming of files should **includ
 ## 1. Face Detection 
 Open an anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\SynchronyDetection\1_FaceDetection` <br><br>
+- `cd {your path}\Synchrony_Detection\1_FaceDetection` <br><br>
 - `python automate_face.py --folder {your analysis folder}`
 
 Run the script and wait for the results to be saved.
@@ -55,7 +55,7 @@ Run the script and wait for the results to be saved.
 ### Notice that this section can run in parallel with section 1.
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\SynchronyDetection\2_Reaching-Detection\src` <br><br>
+- `cd {your path}\Synchrony_Detection\2_Reaching-Detection\src` <br><br>
 - `python automate_pose.py --folder {your analysis folder}`
 
 Run the script and wait for the results to be saved.
@@ -69,7 +69,7 @@ The combined analysis script does three things
 
 To run the combined analysis, open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Combined_Analysis` <br><br>
+- `cd {your path}\Synchrony_Detection\Combined_Analysis` <br><br>
 - `python combined_analysis.py --folder {your analysis folder}`
 
 Results are saved to cross_corr_output\combined_results.csv
