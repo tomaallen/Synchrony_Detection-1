@@ -27,7 +27,7 @@
 1. Download openpose gpu version from https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases and save to local drive
 1. Download 3rd party for 2021 and models from here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
 	- unzip all, including subfolders e.g. using 7-zip
-	- add these downloads to respective folders in openpose download
+	- add these downloads to respective folders in openpose download (drag and drop the whole folder)
 1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2-Reaching_Detection
 	- Replace any existing files
 
