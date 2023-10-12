@@ -1,6 +1,8 @@
 # Synchrony_Detection
 
 ## To Do in new fork:
+- Check and remove 3rd party models from installation
+
 - clean up RD/src of excess files
 
 - check gitattribute and gitignore files
