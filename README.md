@@ -14,7 +14,7 @@
 ## Installation
 1. Install Anaconda
 1. **Download** the GitHub repository Synchrony_Detection from my new fork
-1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive
+1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive (or cuda==11.8 also works)
 	- if different version of cuda used you will need to change pytorch version in requirements.txt
 	- using pytorch>2.0 will result in face_detection using cpu only on windows
 	- you should not need cudnn as it is included in openpose binaries for windows (but I have it installed anyway)
