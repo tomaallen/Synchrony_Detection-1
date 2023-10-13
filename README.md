@@ -1,8 +1,6 @@
 # Synchrony_Detection
 
 ## To Do in new fork:
-- Check and remove 3rd party models from installation
-
 - clean up RD/src of excess files
 
 - check gitattribute and gitignore files
@@ -13,23 +11,22 @@
 
 ## Installation
 1. Install Anaconda
-1. **Download** the GitHub repository Synchrony_Detection from my new fork
-1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive (or cuda==11.8 also works)
-	- if different version of cuda used you will need to change pytorch version in requirements.txt
+1. Download the GitHub repository Synchrony_Detection from my new fork
+1. install cuda=11.7 on device from here https://developer.nvidia.com/cuda-11-7-0-download-archive (or cuda=11.8 also works)
+	- if cuda<11.7 used you will need to change pytorch version in requirements.txt
 	- using pytorch>2.0 will result in face_detection using cpu only on windows
-	- you should not need cudnn as it is included in openpose binaries for windows (but I have it installed anyway)
 1. Create an environment e.g. named synchrony_detection
-	- MUST INSTALL PYTHON V3.7.16
 	- `conda create -n synchrony_detection python==3.7.16`
 	- `conda activate synchrony_detection`
 	- `pip install -r {your path}\Synchrony_Detection\requirements.txt`
-1. Download best.pt and add to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder (available to download on OneDrive)
-1. Download openpose gpu version from https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases and save to local drive
-1. Download 3rd party for 2021 and models from here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
-	- unzip all, including subfolders e.g. using 7-zip
-	- add these downloads to respective folders in openpose download (drag and drop the whole folder)
+1. Download openpose gpu version
+	- download: https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases/download/v1.7.0/openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended.zip
+ 	- unzip the downloaded folder
+1. Download models
+	- download: https://drive.google.com/drive/folders/1TUGl__i7x7JJKWsMts-RhyYNeS8UAIr3?usp=sharing
+ 	- add best.pt to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder
+  	- drag and drop the models folder into the unzipped openpose folder - this adds additional files to the existing models folder
 1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2-Reaching_Detection
-	- Replace any existing files
 
 
 ## Data Preparation 
@@ -37,7 +34,7 @@
 Trim the videos to obtain only the required portion (STT task, PCI task, etc.)
 
 ### Files Location and Naming Constraint
-Videos should be stored in a single flat folder. Naming of files should **include participant names at the least** in order to combine outputs from multiple cameras at the end of analysis. 
+Videos should be stored in a single flat folder. Naming of files should **include participant names and time point at the least** in order to combine outputs from multiple cameras at the end of analysis. 
 <br><br> Example: BLBR001_SyncCam, LP004_BabyCam, Bangladesh012_SyncCam. etc.
 
 
@@ -74,3 +71,6 @@ To run the combined analysis, open a new anaconda prompt and type:
 
 Results are saved to cross_corr_output\combined_results.csv
 Information about whether each step of analysis has run can be found in analysis_info\analysis_info.csv
+
+## 4. Combining Results Across Cameras
+If you have run the analysis on multiple cameras per participant you should combine the outputs as follows to give a single estimate of pose synchrony for each participant...
