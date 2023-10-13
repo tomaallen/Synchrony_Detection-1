@@ -2,7 +2,6 @@
 
 ## To Do in new fork:
 - clean up RD/src of excess files
-- 3rd party openpose files might be required - need to test this
 
 - check gitattribute and gitignore files
 	- check with local git etc.
