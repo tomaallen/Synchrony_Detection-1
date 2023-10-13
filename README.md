@@ -34,7 +34,7 @@
 Trim the videos to obtain only the required portion (STT task, PCI task, etc.)
 
 ### Files Location and Naming Constraint
-Videos should be stored in a single flat folder. Naming of files should **include participant names and time point at the least** in order to combine outputs from multiple cameras at the end of analysis. 
+Videos should be stored in a single flat folder. Naming of files should *include participant names and time point at the least* in order to combine outputs from multiple cameras at the end of analysis. 
 <br><br> Example: BLBR001_SyncCam, LP004_BabyCam, Bangladesh012_SyncCam. etc.
 
 
