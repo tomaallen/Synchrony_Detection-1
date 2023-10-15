@@ -12,8 +12,8 @@
 1. Download openpose gpu version
 	- download: https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases/download/v1.7.0/openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended.zip
  	- unzip the downloaded folder
-1. Download models
-	- download: https://drive.google.com/drive/folders/1TUGl__i7x7JJKWsMts-RhyYNeS8UAIr3?usp=sharing
+1. Download models from Models link located here https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/1602#issuecomment-641653411
+2. download best.pt from https://drive.google.com/drive/folders/1TUGl__i7x7JJKWsMts-RhyYNeS8UAIr3?usp=sharing
  	- add best.pt to Synchrony_Detection\\1_FaceDetection\\yolov7-main folder
 	- drag and drop the models folder into the unzipped openpose folder - this adds additional files to the existing models folder
 1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2-Reaching_Detection
