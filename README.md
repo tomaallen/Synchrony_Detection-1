@@ -1,14 +1,4 @@
 # Synchrony_Detection
-
-## To Do in new fork:
-- clean up RD/src of excess files
-
-- check gitattribute and gitignore files
-	- check with local git etc.
-	- need to clear up handling of .dll files
-	- if you can get it into a local repo then rename 2_Reaching-Detection to 2_PoseDetection
-
-
 ## Installation
 1. Install Anaconda from [https://www.anaconda.com/download and follow the installation tutorial ](https://docs.anaconda.com/free/anaconda/install/windows/)
 1. Download the GitHub repository Synchrony_Detection from my new fork
