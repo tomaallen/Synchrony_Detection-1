@@ -2,30 +2,24 @@
 This folder contains Model 2 of the Synchrony analysis. <br>
 Modules 0_PreprocessForAutomation, 1_FaceDetection, 2_Reaching-Detection are the same and have been run already.
 <br><br>
-Synchrony is checked using the Multidimensional Recurrence Quantification Analysis (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full).
-Description of the toolbox...
-
-#### Part one: Python code to prodcue the inputs for the MRQA analysis ###
-At this point, modules  have been already run.
-This section uses as input the .json combined files produces by the previous modules.
-
-## Code description ##
-The folder contains 3 main scripts:
-- main_discarded_frames.py
-- main_input_data_process.py
-- functions.py
-
-# main_discarded_frames.py # 
-This algorithm takes as inputs the .json combined file that contains for each participant information about mom and baby faces 
-and bodies.
-This scipt checks which frames are ok to work with and which are not for each dataset.
-The criteria to estabilish when a frame is a good one are the following:
-- a frame should contain at least two people (mom and least, experimenters, etc.)
-- there sohuld be a couple mom-baby in the frame (since we have to check synchrony between them)
-- mom and baby selected keypoints have to have a certain confidence score that can be choosen
-
-The scipt discarded the frames that are not good and outputs an excel files that says for each datasets how many good and bad 
-frames we have. This is used as preliminary analysis.
+Synchrony is checked using the Multidimensional Recurrence Quantification Analysis (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full). <br>
+The toolbox used to evaluate the scores and the images is implemented in Matlab, whereas the input files to run the Matlab toolbox are processed in python.
+<br><br>
+## Part one: Python code to produce MRQA analysis inputs
+This section uses as input the .json combined files produces in the previous modules. <br>
+**Code description:** <br>
+**main_discarded_frames.py** <br>  
+This script takes as inputs the .json combined file containing info about mom's and baby's faces and bodies. <br>
+It checks which frames are ok to work with and which are not for each dataset following this criteria: <br>
+- a frame should contain at least two people <br>
+- there sohuld be a couple mom-baby in the frame <br>
+- mom and baby selected keypoints must score a selected confidence level <br>
+<br><br>
+The scipt discarded the frames that are not good and outputs an excel file for each dataset containing the following information:<br>
+- total number of frames <br>
+- how many good frames <br>
+- how many bad frames <br><br>
+*This is used as preliminary analysis.* <br><br>
 
 # main_input_data_process # 
 This script outputs an excel file for each dataset that is going to be the input of the MRQA.
