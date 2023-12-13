@@ -30,7 +30,11 @@ If the frames is a bad one (does not fit the criteria previously explained) a li
 This file contains all the functions to run the two main scripts. <br>
 <br>
 ## Run the code 
-There are serveral paraments that can be set and changed before running the analysis.
+Preliminary analysis for your dataset:
+- `cd pathToYourFolder` <br><br>
+- `python main_discarded_frames.py` <br><br>
+
+
 - path root
 - excel file name
 - keypoints analyzed
