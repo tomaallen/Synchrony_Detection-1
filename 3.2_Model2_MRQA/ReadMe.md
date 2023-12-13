@@ -1,5 +1,5 @@
 # Model 2 MRQA
-This folder contains Model 2 of the Synchrony analysis.
+This folder contains Model 2 of the Synchrony analysis. <br>
 Modules 0_PreprocessForAutomation, 1_FaceDetection, 2_Reaching-Detection are the same and have been run already.
 
 This time, Synchrony is checked using the Multidimensional Recurrence Quantification Analysis toolbox.
