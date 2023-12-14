@@ -30,20 +30,19 @@ If the frames is a bad one (does not fit the criteria previously explained) a li
 This file contains all the functions to run the two main scripts. <br>
 <br>
 ## Run the code 
-Preliminary analysis for your dataset:
-- `cd pathToYourFolder` <br><br>
+**Preliminary analysis for your dataset:**
+- open the script *python main_discarded_frames.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored and change the **workbook** parameters with the name you want to assign to the excel file <br><br>
+- `cd pathToYourFolder`<br><br>
+- `python main_discarded_frames.py` <br><br>
+
+**MRQA input preparation:**
+- open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.
+- `cd pathToYourFolder`<br><br>
 - `python main_discarded_frames.py` <br><br>
 
 
-- path root
-- excel file name
-- keypoints analyzed
-- confidence score
-
-
 ## Results  
-
-
+An excel file with each 
 
 
 
@@ -51,7 +50,7 @@ Preliminary analysis for your dataset:
 
 ## Installation
 
-## Code description 
+## Code Description 
 
 ## How to run the code 
 
