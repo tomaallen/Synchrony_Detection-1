@@ -47,7 +47,7 @@ Open a new anaconda prompt and type:
 
 Run the script and wait for the results to be saved.
 
-## 3. Combined Analysis
+## 3. Combined Analysis & Model 1
 The combined analysis script does three things
 1. Copies the face csv file to the pose output folder
 1. Generates a combined json file in the pose output folder
