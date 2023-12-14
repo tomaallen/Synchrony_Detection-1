@@ -37,9 +37,8 @@ This file contains all the functions to run the two main scripts. <br>
 
 **MRQA input preparation:**
 - open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.
-- `cd pathToYourFolder`<br><br>
-- `python main_discarded_frames.py` <br><br>
-
+- `cd pathToYourFolder`
+- `python main_discarded_frames.py` 
 
 ## Results  
 An excel file with each 
