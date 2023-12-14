@@ -36,13 +36,16 @@ This file contains all the functions to run the two main scripts. <br>
 - `python main_discarded_frames.py` <br><br>
 
 **MRQA input preparation:**
-- open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.
-- `cd pathToYourFolder`
-- `python main_discarded_frames.py` 
+- open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.<br>
+- `cd pathToYourFolder`<br>
+- `python main_discarded_frames.py` <br>
 
 ## Results  
-An excel file with each 
-
+The *python main_discarded_frames.py* script produces one Excel file with the results of all the datasets analyzed.<br>
+Each row of the file contains the total amount of frames, the # of good frames, and the # of bad frames of the analyzed dataset. <br> 
+<br>
+The *python main_discarded_frames.py* script produces one Excel file for each dataset.<br>
+Each row of the file contains the x and y coordinates of the selected key points (for both mom and by) in a specific frame.
 
 
 # Part two: Matlab code to run the MRQA analysis ###
