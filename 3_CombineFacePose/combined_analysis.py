@@ -11,12 +11,10 @@ if __name__ == '__main__':
     # Add the arguments
     my_parser.add_argument('--folder',
                            type=str,
-                           help='the folder containing both face_detect_output and pose_detect_output',
-                           default=r'D:\\test')
+                           help='the folder containing both face_detect_output and pose_detect_output')
     my_parser.add_argument('--fps',
                            type=str,
-                           help='video fps',
-                           default=25)
+                           help='video fps')
 
     # Execute the parse_args() method
     args = my_parser.parse_args()
@@ -105,7 +103,7 @@ if __name__ == '__main__':
                     command = 'python run_analysis_plots.py --PCI_dir ' + cross_corr_path \
                         + ' --reach_dir ' + os.path.join(pose_path, vid) \
                             + ' --plot_on False' \
-                                + ' --fps ' + str(args.fps) # default fps is 25 if unspecified
+                                + ' --fps ' + str(args.fps) # no default anymore
                     print(shlex.split(command, posix = 0))
                     subprocess.check_call(shlex.split(command, posix = 0))
                 
