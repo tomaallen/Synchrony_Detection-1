@@ -57,7 +57,7 @@ The combined analysis script does three things
 To run the combined analysis, open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\3_CombineFacePose` <br><br>
-- `python combined_analysis.py --folder {your analysis folder}`
+- `python combined_analysis.py --folder {your analysis folder} --fps {your fps}`
 
 Results are saved to cross_corr_output\combined_results.csv
 Information about whether each step of analysis has run can be found in analysis_info\analysis_info.csv
