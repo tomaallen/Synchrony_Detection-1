@@ -16,16 +16,13 @@ if __name__ == '__main__':
     # Add the arguments
     my_parser.add_argument('--PCI_dir',
 							type=str,
-							help='folder for combined analysis output',
-							default=r'D:\\BRAINRISE_PCI\\Downloaded\\cross_corr_output')
+							help='folder for combined analysis output')
     my_parser.add_argument('--reach_dir',
 							type=str,
-							help='reaching detection output folder for the given video',
-							default=r'D:\\BRAINRISE_PCI\\Downloaded\\pose_detect_output\\006_03-06-22_2a_av__c4')
+							help='reaching detection output folder for the given video')
     my_parser.add_argument('--fps',
 							type=int,
-							help='video fps',
-							default=25.00)
+							help='video fps')
     my_parser.add_argument('--plot_on',
 							type=bool,
 							help='create plots or not - otherwise just make segmented analysis json',
