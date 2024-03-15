@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models
+*.pt
+
+# Specific OpenPose folders
+2_PoseDetection/bin/
+2_PoseDetection/lib/
+2_PoseDetection/models/
+2_PoseDetection/include/
