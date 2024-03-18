@@ -1,7 +1,7 @@
 import os
 
 # functions related to directories (folders) and files
-# Structure:
+# Structure of pose detection folders:
 # Parent dir
 #  - Video dir 1
 #     - csv_files
@@ -13,13 +13,8 @@ import os
 #  - Video dir 2
 #  - ...
 
-# INPUT_FOLDER is the "Parent dir"
-
-INPUT_FOLDER = "D:\\BRAINRISE_PCI\\Downloaded\\pose_detect_output\\029_15_07_2022_c3"
-# "face data\\LP016_PCI" #  "Bld Data\\LCC2058" # "Temp Data\\LP016_PCI"
-#  "Brazil Data\\029_15_07_2022_C2" #
-# "D:\\Temp C\\Users\\Home - Jupiter\\Desktop\\Brazil\\029_15_07_2022_C2"
-# 'Temp Data\\LP016_PCI' # "C:\\Users\\Home - Jupiter\\Desktop\\coordination\\LP031_PCI"  #
+# INPUT_FOLDER is the "Parent dir" as shown above
+INPUT_FOLDER = ""
 YOLO_INPUT_FOLDER = INPUT_FOLDER
 # OUTPUT_FOLDER is normally the same "Parent dir"
 OUTPUT_FOLDER = INPUT_FOLDER
@@ -174,3 +169,4 @@ BODY_25_COLORS = [(255, 0, 85), (255, 0, 0), (255, 85, 0), (255, 170, 0), (255, 
 # NO_CSV_FILES = len([name for name in os.listdir(CSV_FOLDER)
 #                     if os.path.isfile(os.path.join(CSV_FOLDER, name))]) // 2
 FRAME_RANGE = None
+

@@ -1,8 +1,5 @@
 # Synchrony_Detection
 
-## TODO
-- Add post-processing get_best_camera
-
 ## Installation
 1. Install Anaconda
 1. Download or clone the GitHub repository Synchrony_Detection
@@ -23,20 +20,19 @@
 1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2_PoseDetection
 
 
-## Data Preparation 
-### Trim Videos
-Trim the videos to obtain only the required portion (STT task, PCI task, etc.)
+## Preparation 
+### Naming Constraint
+Naming of PCI videos should *include participant names and time point at the least* in order to select the best camera angle for each session. This is implemented in 3.0_CombinedHeadPose>combined_analysis.py.
 
-### Files Location and Naming Constraint
-Videos should be stored in a single flat folder. Naming of files should *include participant names and time point at the least* in order to combine outputs from multiple cameras at the end of analysis. 
-<br><br> Example: BLBR001_SyncCam, LP004_BabyCam, Bangladesh012_SyncCam. etc.
-
+### Specifying folder location
+Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed.
+	- **ESSENTIAL: Open settings.py and change FOLDER to your folder location.**
 
 ## 1. Face Detection 
 Open an anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\1_HeadDetection` <br><br>
-- `python automate_face.py --folder {your analysis folder}`
+- `python detect_face.py`
 
 Run the script and wait for the results to be saved.
 
@@ -45,25 +41,34 @@ Run the script and wait for the results to be saved.
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\2_PoseDetection\src` <br><br>
-- `python automate_pose.py --folder {your analysis folder}`
+- `python detect_pose.py`
 
 Run the script and wait for the results to be saved.
 
-## 3. Combined Analysis
+## 3.0. Combined Analysis
 The combined analysis script does three things
 1. Copies the face csv file to the pose output folder
 1. Generates a combined json file in the pose output folder
-1. Runs cross-correlation model 1.0 by calling file_input_run_plots and file_input_run_parameters
-	- **This could be adapted to use newer models**
+1. Checks for the best camera angle with the most good frames
 
-To run the combined analysis, open a new anaconda prompt and type:
+To run the combined analysis:
+- Edit combined_analysis.py lines 112-113 to extract participant id and timepoint from your filenames (or Synapse metadata)
+	- This is crucial in selecting the best camera angle from each session
+Then open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\3_CombineHeadPose` <br><br>
-- `python combined_analysis.py --folder {your analysis folder}`
+- `cd {your path}\Synchrony_Detection\3.0_CombineHeadPose` <br><br>
+- `python combined_analysis.py`
 
-Results are saved to cross_corr_output\combined_results.csv
-Information about whether each step of analysis has run can be found in analysis_info\analysis_info.csv
+Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv
+Information about how good each camera angle is can be found in {settings.FOLDER}\analysis_info\data_quality.csv
+The best cameras are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
 
-## 4. Combining Results Across Cameras
-If you have run the analysis on multiple cameras per participant/session, our current approach is to use the camera with the most maximum values, taking a random camera in event of a tie.
-**See get_best_camera when added**
+## 3.1. Model 1 - Cross-correlations
+TODO: [Text about cross-correlations model and explanation that it only runs on the best cameras]
+- `conda activate synchrony_detection` <br><br>
+- `cd {your path}\Synchrony_Detection\3.1_Model1_CrossCorr` <br><br>
+- `python run_model1.py {your_video_fps}`
+
+## 3.2. Model 2 - MdRQA
+
+## 3.3 Model 3 - Graph Networks

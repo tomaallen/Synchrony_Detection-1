@@ -10,6 +10,12 @@ import numpy as np
 from distutils.dir_util import copy_tree
 import shutil
 from pathlib import Path
+import argparse
+
+import sys
+parent_dir = str(Path(os.getcwd()).parent)
+sys.path.append(parent_dir)
+import settings
 
 
 def get_all_files_recursively_by_ext(root, ext):
@@ -84,16 +90,14 @@ def main(input_path, txt_output_directory, csv_output_path, yolo_exp_name, yolo_
 
 
 if __name__ == "__main__":
-    import argparse
-
     # edited
-    parser = argparse.ArgumentParser(description='Parse args for face detection')
-    parser.add_argument('--input_path', default='',
+    parser = argparse.ArgumentParser(description='Parse args for head detection')
+    parser.add_argument('--input', default=None,
                         type=str,
                         help='The path to the input video or folder.')
-    parser.add_argument('--txt_output_directory', default='', type=str,
+    parser.add_argument('--output', default=None, type=str,
                         help='Where to save the yolo raw output?')
-    parser.add_argument('--yolo_exp_name', default='', type=str,
+    parser.add_argument('--yolo_exp_name', default='head_run', type=str,
                         help='Name the run, e.g., for LP006s video simply name it as "LP006", then a LP006.csv will be generate in txt_output_directory')
     parser.add_argument('--yolo_py_path', default='yolov7-main\\detect.py', type=str,
                         help='The path to detect.py from YoloV7 folder.')
@@ -102,41 +106,42 @@ if __name__ == "__main__":
 
     opt = parser.parse_args()
 
-    if os.path.isfile(opt.input_path):
-        csv_output_path = os.path.join(opt.txt_output_directory, opt.yolo_exp_name + ".csv")
-        main(input_path=opt.input_path, txt_output_directory=opt.txt_output_directory, csv_output_path=csv_output_path,
-            yolo_exp_name=opt.yolo_exp_name, yolo_py_path=opt.yolo_py_path, yolo_weight_path=opt.yolo_weight_path) #edited
+    # to run on an individual file pass input argument
+    if opt.input:
+        if os.path.isfile(opt.input):
+            csv_output_path = os.path.join(opt.output, opt.yolo_exp_name + ".csv")
+            main(input_path=opt.input, txt_output_directory=opt.output, csv_output_path=csv_output_path,
+                yolo_exp_name=opt.yolo_exp_name, yolo_py_path=opt.yolo_py_path, yolo_weight_path=opt.yolo_weight_path) #edited
+          
+        else:
+            raise Exception("input does not exist")
 
-    elif os.path.isdir(opt.input_path): # run on flat folder structure
-        for file in os.listdir(opt.input_path):
-            if file.endswith('.mp4'):
-                
-                # make save directory if it does not exist
-                save_path = os.path.join(opt.input_path, 'face_detect_output')
-                if not os.path.isdir(save_path):
-                    os.mkdir(save_path)
+    else: # to run on flat folder structure, do not pass input argument
+        if os.path.isdir(settings.FOLDER):
+            for file in os.listdir(settings.FOLDER):
+                if file.endswith('.mp4'):
                     
-                # clear runs directory of previous unfinished analysis
-                if os.path.exists(os.path.join(os.getcwd(), 'runs')):
-                    shutil.rmtree(os.path.join(os.getcwd(), 'runs'))
-                    print(os.path.join(os.getcwd(), 'runs') + ' cleared')
-                
-                file_no_ext = os.path.splitext(file)[0]
-                vid_save_path = os.path.join(save_path, file_no_ext)
-                csv_save_path = os.path.join(vid_save_path, file_no_ext + ".csv")
+                    # make save directory if it does not exist
+                    if not os.path.isdir(settings.HEAD_FOLDER):
+                        os.mkdir(settings.HEAD_FOLDER)
+                        
+                    # clear runs directory of previous unfinished analysis
+                    if os.path.exists(os.path.join(os.getcwd(), 'runs')):
+                        shutil.rmtree(os.path.join(os.getcwd(), 'runs'))
+                        print(os.path.join(os.getcwd(), 'runs') + ' cleared')
+                    
+                    file_no_ext = os.path.splitext(file)[0]
+                    vid_save_path = os.path.join(settings.HEAD_FOLDER, file_no_ext)
+                    csv_save_path = os.path.join(vid_save_path, file_no_ext + ".csv")
 
-                if not os.path.isdir(vid_save_path): # if not run before
-                    p_vid = os.path.join(opt.input_path, file)
-                    print(p_vid)
-                    print(vid_save_path)
-                    print(csv_save_path)
-                    print(file_no_ext)
-                    main(input_path=p_vid,
+                    if not os.path.isdir(vid_save_path): # if not run before
+                        p_vid = os.path.join(settings.FOLDER, file)
+                        main(input_path=p_vid,
                             txt_output_directory=vid_save_path,
                             csv_output_path=csv_save_path,
                             yolo_exp_name=file_no_ext,
                             yolo_py_path=opt.yolo_py_path,
                             yolo_weight_path=opt.yolo_weight_path)
 
-    else:
-        raise Exception("Please specify an input file or folder")
+        else:
+            raise Exception('FOLDER in settings.py is not a directory')

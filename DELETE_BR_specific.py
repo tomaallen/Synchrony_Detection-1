@@ -5,9 +5,11 @@ import synapseutils
 import re
 
 # %% read data quality check file
-data_quality = pd.read_csv("D:\\test\\analysis_info\\data_quality.csv")
+analysis_info_path = "D:\\test\\analysis_info\\"
+data_quality = pd.read_csv(os.path.join(analysis_info_path, "data_quality_test.csv"))
 
-# %% get participant and timepoint from filename (or synapse for BR)
+
+# %% prerequisites to get timepoint for BRAINRISE participants (filenaming is weird)
 # get Synapse metadata
 manifest = pd.read_csv("C:\\Users\\bllca\OneDrive - University of Cambridge\LEAP Cambridge Shared\Pose_Synchrony\PCI_BRAINRISE\Synapse_Metadata\synapse_metadata_manifest.tsv", sep='\t')
 
@@ -17,13 +19,14 @@ syn = synapseclient.login(authToken='eyJ0eXAiOiJKV1QiLCJraWQiOiJXN05OOldMSlQ6SjV
 # function to rename filekeys
 def filekey_rename(x: str):
     new_name = x.lower().replace(' ','_').removesuffix('.mp4').removesuffix('.mp4').removesuffix('.mov').removesuffix('.3gp')
-    new_name = new_name.replace('ª','a')# remove weird a character from filename
+    new_name = new_name.replace('ª','a') # remove weird a character from filename
     return  new_name
 
 # get filenames and SynID from folder for serial download
 walkedPath = synapseutils.walk_functions.walk(syn, 'syn36007626', ['file'])
 fileDict = dict(list(walkedPath)[0][2])
 fileDict = {filekey_rename(k): v for k, v in fileDict.items()} # edit keys to be compatible with renamed files
+
 
 # %% get timepoint from manifest
 def get_tp(filename: str): # requires manifest
@@ -45,11 +48,12 @@ def get_tp(filename: str): # requires manifest
     except:
         return int(re.search(r'\da', filename)[0].strip('a'))
 
-data_quality['ppt'] = data_quality.Filename.apply(lambda x : int(re.search(r'\d+', x)[0]))
-data_quality['tp'] = data_quality.Filename.apply(get_tp)
+# get ppt and timepoint from filename (or synapse if file naming is weird)
+data_quality['ppt'] = data_quality.Filename.apply(lambda x : int(re.search(r'\d+', x)[0])) # XXX: insert function to get participant age here
+data_quality['tp'] = data_quality.Filename.apply(get_tp) # XXX: insert function to get timepoint here
 
 # choose the file for each participant and timepoint with the most good frames
 best_cams_idx = list(data_quality.groupby(['ppt', 'tp'])['Good frames'].idxmax())
-best_cams = list(data_quality.iloc[best_cams_idx].Filename)
+best_cams = data_quality.iloc[best_cams_idx].Filepath
+best_cams.to_csv(os.path.join(analysis_info_path, "best_cameras.csv"))
 
-# XXX: copy best cam jsons into their own folder???

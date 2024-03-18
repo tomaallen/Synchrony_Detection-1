@@ -103,7 +103,7 @@ class Input():
             print(isMediaFile(file_name))
         self.video_input = os.path.join(reaching_const.INPUT_FOLDER, file_name)
         prefix = file_name[:file_name.rindex('.')]
-        folder_csv = reaching_const.OUTPUT_FOLDER + prefix + '/'
+        folder_csv = os.path.join(reaching_const.OUTPUT_FOLDER, prefix + '/')
 
         self.folder_csv = folder_csv + 'csv_files/'
         if not os.path.exists(self.folder_csv):
