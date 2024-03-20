@@ -3,10 +3,12 @@ import os
 import argparse
 import csv
 import subprocess, shlex
-from functions import filter_dict, filter_conf
+from functions import filter_dict
 import json
 import pandas as pd
 import re
+import numpy as np
+from reaching_const import KEYPOINTS_DICT
 
 from pathlib import Path
 import sys
@@ -26,10 +28,14 @@ if __name__ == '__main__':
                           'Plots_run','Parameters_run']])
 
     # create data quality check file
-    data_quality = os.path.join(settings.ANALYSIS_FOLDER, "data_quality.csv")
+    data_quality = os.path.join(settings.ANALYSIS_FOLDER, "data_quality_summary.csv")
     with open(data_quality, 'w', newline="") as f:
         write = csv.writer(f)
-        write.writerows([['Filename', 'Filepath', 'Total frames', 'Discarded frames', 'Good frames']])
+        write.writerows([['Filename', 'Filepath', 'Total frames', 'Good frames']])
+
+    # create frame check folder
+    if not os.path.isdir(settings.FRAME_CHECKS):
+        os.mkdir(settings.FRAME_CHECKS)
     
     # get info on analysis, copy face csv to pose folder and create combined json
     for file in os.listdir(settings.FOLDER):
@@ -81,23 +87,27 @@ if __name__ == '__main__':
                 json_combined = os.path.exists(combined_json_path)
 
                 # data quality check
+                print('######### Data quality check on: ' + os.path.basename(combined_json_path) + ' ######################\n')
+                print(combined_json_path)
+
                 f = open(combined_json_path)
                 dict_initial = json.load(f) # initial dictionary
-                dict_filtered, discarded_frames_temp = filter_dict(dict_initial) # filters dict by discarding frames with less than 2 ppl and frames with no baby-mom couple detected
-                dict_final, discarded_frames = filter_conf(dict_filtered, discarded_frames_temp) # filters dict by discarding neck and hip keypoint with conf level <.3
-                print('\n # of Discarded frames: ' + str(discarded_frames) + '\n')   
-                print('The length of the initial dictionary is ' + str(len(dict_initial)) + '\n')
-                print('The length of the final dictionary is ' + str(len(dict_final)))
-
-                # Fill csv
+                f.close()
+                
+                ai_dyad, confident = filter_dict(dict_initial, conf_threshold=0.3)
+                # ai_dyad = whether mum and baby are in the frame
+                # confident = which frames keypoint is above confidence threshold for mum and baby
+                frame_check = pd.DataFrame([[x] + list(y) for x, y in zip(ai_dyad, confident)],
+                                columns = ['GoodFrame'] + list(KEYPOINTS_DICT.values()))
+                frame_check.to_csv(settings.FRAME_CHECKS / (vid + ".csv"))
+                
+                # write to data quality file for camera selection
                 with open(data_quality, 'a', newline="") as f:
                     write = csv.writer(f)
-                    write.writerows([[os.path.basename(combined_json_path)[:-24], # remove suffix "-PD-combined_output.json"
+                    write.writerows([[vid,
                                     combined_json_path,
                                     len(dict_initial),
-                                    discarded_frames,
-                                    len(dict_final)]])
-                                    
+                                    np.mean(ai_dyad)]])                          
 
             # write analysis info to csv file in settings.FOLDER
             with open(analysis_info, 'a', newline="") as f:
@@ -105,14 +115,4 @@ if __name__ == '__main__':
                 write.writerows([[vid, face_attempted, face_completed, pose_attempted, 
                                   pose_completed, csv_copied, json_combined]])
 
-    # %% read data quality check file
-    data_quality = pd.read_csv(os.path.join(settings.ANALYSIS_FOLDER, "data_quality.csv"))
-
-    # get ppt and timepoint from filename (or synapse if file naming is weird)
-    data_quality['ppt'] = data_quality.Filename.apply(lambda x : int(re.search(r'\d+', x)[0])) # XXX: insert function to get participant age here
-    data_quality['tp'] = data_quality.Filename.apply(lambda x : re.search(r'\d+a', x)[0]) # XXX: insert function to get timepoint here
-
-    # choose the file for each participant and timepoint with the most good frames
-    best_cams_idx = list(data_quality.groupby(['ppt', 'tp'])['Good frames'].idxmax())
-    best_cams = data_quality.iloc[best_cams_idx].Filename
-    best_cams.to_csv(str(settings.BEST_CAMERAS))
+# %%

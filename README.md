@@ -1,4 +1,5 @@
 # Synchrony_Detection
+[for LEAP 1kD performers only - please do not circulate or redistribute]
 
 ## Installation
 1. Install Anaconda
@@ -47,24 +48,47 @@ Run the script and wait for the results to be saved.
 
 ## 3.0. Combined Analysis
 The combined analysis script does three things
-1. Copies the face csv file to the pose output folder
-1. Generates a combined json file in the pose output folder
-1. Checks for the best camera angle with the most good frames
+1. Copies the head/face csv file to the pose output folder
+1. Generates a combined json file in the pose output folder, with id-assigned skeletons
 
-To run the combined analysis:
-- Edit combined_analysis.py lines 112-113 to extract participant id and timepoint from your filenames (or Synapse metadata)
-	- This is crucial in selecting the best camera angle from each session
 Then open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\3.0_CombineHeadPose` <br><br>
 - `python combined_analysis.py`
 
 Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv
-Information about how good each camera angle is can be found in {settings.FOLDER}\analysis_info\data_quality.csv
-The best cameras are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
+A basic summary of camera angle quality can be found in {settings.FOLDER}\analysis_info\data_quality.csv
+
+Before running models:
+- Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames (or Synapse metadata)
+	- This is crucial in selecting the best camera angle from each session
+- Each model has a different data quality check depending on the model parameters
+	- All are implemented with data_quality_check()
+- The best cameras from each session are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
 
 ## 3.1. Model 1 - Cross-correlations
-TODO: [Text about cross-correlations model and explanation that it only runs on the best cameras]
+Pose Synchrony Model 1 data consists of 4 metrics:
+
+- Infant and Mother Initiated Interactions are calculated as the normalized number of mother initiations per unit time (ratio between no. mother initiation / length of the interaction). It is calculated like so:
+
+	For each segment of data, perform a sliding-windowed cross-correlation. 
+	For each segment, find the number of windows in which peak lag indicates mother or infant was leading the interaction (+ve or -ve).
+	Sum the number of mother/infant led windows (interactions) across all segments in the video and divide by the total length of all segments combined.
+	Final result is normalised per second.
+
+- Change of leader = normalized number of leading changes per unit time (ratio between # leading changes / length of the interaction). A lead change is when the individual leading/initiating the interaction has been switched between mother and infant from one window to the next. It is normalised the same as the above.
+
+- Synchrony Stability (intensity) = normalized correlation intensity (ratio between mean lag variance  / length of the interaction). The correlation intensity is defined as the variance in the peak lag, where the peak lag is calculated for each window.
+
+
+BRAINRISE timepoints:
+t1 = 3-5 months
+t2 = 6-9 months
+t3 = 10-16 months
+
+KHULA timepoints:
+6M (t2) = 6-10 months
+12M (t3) = 12-15 months
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\3.1_Model1_CrossCorr` <br><br>
 - `python run_model1.py {your_video_fps}`

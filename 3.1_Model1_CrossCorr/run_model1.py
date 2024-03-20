@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(os.getcwd()).parent))
 import settings
+import data_quality_check as dqc
 
 import matplotlib.pyplot as plt
 from model1.preprocess import get_head_angle, get_arm_angle
@@ -32,13 +33,24 @@ if __name__ == '__main__':
     # Execute the parse_args() method
     args = my_parser.parse_args()
     
-    # set paths within settings.FOLDER
-    settings.MODEL1_FOLDER = Path(str(settings.MODEL1_FOLDER) + '_' + args.fps)
+    # set analysis folder with fps shown
+    settings.MODEL1_FOLDER = Path(str(settings.MODEL1_FOLDER) + "_" + args.fps + "fps")
     if not os.path.isdir(settings.MODEL1_FOLDER): # make cross_corr output folder if does not exist
         os.mkdir(settings.MODEL1_FOLDER)
     
-    # read best cameras
-    best_cams = pd.read_csv(str(settings.BEST_CAMERAS))
+    # find the best cameras
+    # check how many frames required keypoints are present
+    # TODO: for each file in the frame check folder
+    # produce array of good frames to be used in analysis (MdRQA in particular)
+    # and produce list of best cameras with most good frames
+    frames_to_use = [] # TODO: currently a placeholder
+    camera_scores = []
+
+    # choose the camera with the most good frames for each participant and timepoint
+    best_cam_list = dqc.get_best_cams([['LShoulder', 'LElbow'],
+                                        ['RShoulder', 'RElbow'],
+                                        ['Nose', 'LEar'],
+                                        ['Nose', 'REar']])
 
     # output headers
     res_rows = [["video",
@@ -47,7 +59,7 @@ if __name__ == '__main__':
                 "change_of_leaders",
                 "synchrony_stability"]]
 
-    for file in best_cams.Filename:
+    for file in best_cam_list:
         # run analysis plots and parameters
         if not os.path.exists(os.path.join(settings.MODEL1_FOLDER, file, file + "-segmented_analysis.json")):
 
