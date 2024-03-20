@@ -94,11 +94,11 @@ if __name__ == '__main__':
                 dict_initial = json.load(f) # initial dictionary
                 f.close()
                 
-                ai_dyad, confident = filter_dict(dict_initial, conf_threshold=0.3)
+                ai_dyad, confident = filter_dict(dict_initial, conf_threshold=0.3) # FIXME: rename function
                 # ai_dyad = whether mum and baby are in the frame
                 # confident = which frames keypoint is above confidence threshold for mum and baby
                 frame_check = pd.DataFrame([[x] + list(y) for x, y in zip(ai_dyad, confident)],
-                                columns = ['GoodFrame'] + list(KEYPOINTS_DICT.values()))
+                                columns = ['DyadPresent'] + list(KEYPOINTS_DICT.values()))
                 frame_check.to_csv(settings.FRAME_CHECKS / (vid + ".csv"))
                 
                 # write to data quality file for camera selection

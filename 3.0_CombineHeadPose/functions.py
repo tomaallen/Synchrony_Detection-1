@@ -4,7 +4,7 @@ def filter_dict(initial_dict, conf_threshold):
     # This function filters the dictionary by removing the frames where there are more than 2 ppl and where there is not mom-baby pair detected
     # It also returns whether each keypoint is above confidence threshold for both mum and baby in each frame
     
-    two_people, ai_dyad, confident = [], [], []
+    ai_dyad, confident = [], []
  
     # Check dict
     for frame, info in initial_dict.items():
