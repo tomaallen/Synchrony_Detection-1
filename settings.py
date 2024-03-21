@@ -30,6 +30,7 @@ ANALYSIS_FOLDER = FOLDER / "analysis_info"
 FRAME_CHECKS = ANALYSIS_FOLDER / "frame_checks"
 BEST_CAMERAS = ANALYSIS_FOLDER / "best_cameras.csv"
 MODEL1_FOLDER = FOLDER / "cross_corr" # fps automatically appended to this name
+MODEL2_FOLDER = FOLDER / "mdrqa" # fps automatically appended to this name
 
 KEYPOINTS_DICT = {0: "Nose",
                   1: "Neck",

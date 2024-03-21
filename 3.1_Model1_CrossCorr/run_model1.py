@@ -11,10 +11,10 @@ import sys
 sys.path.append(str(Path(os.getcwd()).parent))
 import settings
 import data_quality_check as dqc
+from json2csv import read_json
 
 import matplotlib.pyplot as plt
 from model1.preprocess import get_head_angle, get_arm_angle
-from model1.json2csv import read_json
 from model1.corr_functions import *
 
 if __name__ == '__main__':
@@ -37,14 +37,6 @@ if __name__ == '__main__':
     settings.MODEL1_FOLDER = Path(str(settings.MODEL1_FOLDER) + "_" + args.fps + "fps")
     if not os.path.isdir(settings.MODEL1_FOLDER): # make cross_corr output folder if does not exist
         os.mkdir(settings.MODEL1_FOLDER)
-    
-    # find the best cameras
-    # check how many frames required keypoints are present
-    # TODO: for each file in the frame check folder
-    # produce array of good frames to be used in analysis (MdRQA in particular)
-    # and produce list of best cameras with most good frames
-    frames_to_use = [] # TODO: currently a placeholder
-    camera_scores = []
 
     # choose the camera with the most good frames for each participant and timepoint
     best_cam_list = dqc.get_best_cams([['LShoulder', 'LElbow'],

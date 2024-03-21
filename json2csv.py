@@ -1,3 +1,5 @@
+# This code is from Micol's model 1 folder
+
 import json
 import numpy as np
 #from visualization import show_sequence
