@@ -6,6 +6,9 @@ __pycache__/
 # Models
 *.pt
 
+# Specific YOLO folders
+1_HeadDetection/runs/
+
 # Specific OpenPose folders
 2_PoseDetection/bin/
 2_PoseDetection/lib/

@@ -13,13 +13,13 @@ def data_quality_check(df: pd.DataFrame, checks: list):
     perfect_frames = np.array(confident_frames).all(axis=0) # perfect frames are those which meet all check criteria
     quality_score = np.mean(np.array(confident_frames))
 
-    return quality_score, perfect_frames # TODO: perfect frames not being used currently
+    return quality_score, perfect_frames # TODO: perfect frames not being used in the code currently
 
 def get_ppt(filename: str):
-   return re.search(r'\d+', filename)[0]
+   return re.search(r'PID\d+', filename)[0] # XXX: edit this, re.search(r'\d+', filename)[0]
 
 def get_tp(filename:str):
-    return re.search(r'\d+a', filename)[0]
+    return re.search(r'timepoint\d+', filename)[0] # XXX: edit this, re.search(r'\d+a', filename)[0]
 
 def get_best_cams(checks:list):
     # checks the quality of each video and returns a pd.Series of the best videos 
@@ -48,7 +48,7 @@ def get_best_cams(checks:list):
     # save camera quality scores for all cameras
     camera_scores = pd.DataFrame(camera_scores, columns=['Filename', 'ppt', 'tp', 'QualityScore'])
     camera_scores.to_csv(settings.ANALYSIS_FOLDER / "model1_camera_scores.csv")
-    print(camera_scores)
+    # print(camera_scores)
 
     # find the best camera for each session (participant and timepoint)
     best_cams_idx = list(camera_scores.groupby(['ppt', 'tp'])['QualityScore'].idxmax())
@@ -58,7 +58,4 @@ def get_best_cams(checks:list):
     return best_cams.Filename
 
 
-
-
-get_best_cams([['Nose'], ['Neck']])
 # %%

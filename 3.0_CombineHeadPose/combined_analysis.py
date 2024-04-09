@@ -3,7 +3,7 @@ import os
 import argparse
 import csv
 import subprocess, shlex
-from functions import filter_dict
+from filter_dict import filter_dict
 import json
 import pandas as pd
 import re
