@@ -15,7 +15,6 @@ from multiSyncPy.synchrony_metrics import recurrence_matrix, rqa_metrics
 from scipy.signal import savgol_filter
 
 
-
 # %%
 class Dyad: # pose entropy analysis object
 
@@ -41,11 +40,13 @@ class Dyad: # pose entropy analysis object
 	def euclidean(self):
 		_pos = self.pos.transpose((0, 2, 1, 3)) # xy, timepoint, person, keypoint
 		_delta = _pos[:, 1:, :, :] - _pos[:, :-1, :, :]
+		_delta = _delta[]
 		self.speed = np.sqrt((_delta**2).sum(axis=0)) # timepoint, person, keypoint
 		# return self.speed
 
 	def sav_gol(self):
-		savgol_filter(self.pos, window_length=settings.FPS * 3, )
+		self.pos_filt = savgol_filter(self.pos, window_length=settings.FPS * 3, polyorder=2)
+		self.speed_filt = savgol_filter(self.speed, window_length=settings.FPS * 3, polyorder=2)
 
 	
 	def mdrqa_quality_check(self, fps, conf_level=0.3):

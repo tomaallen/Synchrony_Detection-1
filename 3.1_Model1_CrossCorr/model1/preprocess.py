@@ -1,8 +1,13 @@
 import csv
 import numpy as np
 from scipy.interpolate import interp1d
-from model1.json2csv import read_json
 import matplotlib.pyplot as plt
+
+# repository folder added to path in run_model1.py using:
+# from pathlib import Path
+# import sys
+# sys.path.append(str(Path(os.getcwd()).parent))
+from json2csv import read_json
 
 keypoint_name_to_index = {"nose": 0, "lear": 17, "rear": 18, "lelbow": 6, "lshoulder": 5, "relbow": 3, "rshoulder": 2}
 

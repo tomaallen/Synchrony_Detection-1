@@ -15,8 +15,12 @@ import sys
 sys.path.append(str(Path(os.getcwd()).parent))
 import settings
 
+import time
+
 if __name__ == '__main__':
     
+    start = time.time()
+
     # reset info file
     analysis_info = os.path.join(settings.ANALYSIS_FOLDER, "analysis_info.csv")
     if not os.path.isdir(settings.ANALYSIS_FOLDER): # make analysis info folder if does not exist
@@ -114,5 +118,9 @@ if __name__ == '__main__':
                 write = csv.writer(f)
                 write.writerows([[vid, face_attempted, face_completed, pose_attempted, 
                                   pose_completed, csv_copied, json_combined]])
+
+    end = time.time()
+    print('Runtime: {}sec'.format(round(end - start)))
+
 
 # %%

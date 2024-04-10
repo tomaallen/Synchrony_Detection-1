@@ -23,7 +23,7 @@ from pathlib import Path
 #         video_info
 # ----------------------------------------------------------------------
 
-FOLDER = Path("D:\\temp_br_test")  # XXX: edit this path, "E:\\Complete_Dataset"
+FOLDER = Path("D:\\Complete_Dataset")  # XXX: edit this path,   "D:\\temp_br_test"
 HEAD_FOLDER = FOLDER / "head_output"
 POSE_FOLDER = FOLDER / "pose_output"
 ANALYSIS_FOLDER = FOLDER / "analysis_info"

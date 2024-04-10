@@ -17,7 +17,11 @@ import matplotlib.pyplot as plt
 from model1.preprocess import get_head_angle, get_arm_angle
 from model1.corr_functions import *
 
+import time
+
 if __name__ == '__main__':
+
+    start = time.time()
 
     # Create the parser
     my_parser = argparse.ArgumentParser(description='Process some arguments')
@@ -129,3 +133,7 @@ if __name__ == '__main__':
     with open(os.path.join(settings.MODEL1_FOLDER, "combined_results.csv"), "a", newline = "") as f:
         writer = csv.writer(f)
         writer.writerows(res_rows)
+
+    end = time.time()
+    print('Runtime: {}sec'.format(round(end - start)))
+

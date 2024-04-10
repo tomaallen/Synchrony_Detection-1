@@ -41,8 +41,8 @@ def analysis_sequence(filepath: str):
 if __name__ == '__main__':
 
     start = time.time()
-    os.makedirs(settings.ANALYSIS_FOLDER, exists_ok=True)
-    os.makedirs(settings.FRAME_CHECK, exists_ok=True)
+    os.makedirs(settings.ANALYSIS_FOLDER, exist_ok=True)
+    os.makedirs(settings.FRAME_CHECKS, exist_ok=True)
 
     # create data quality check file
     DATA_QUALITY = os.path.join(settings.ANALYSIS_FOLDER / "data_quality_summary.csv")
