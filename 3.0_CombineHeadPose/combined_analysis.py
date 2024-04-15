@@ -9,6 +9,7 @@ import pandas as pd
 import re
 import numpy as np
 from reaching_const import KEYPOINTS_DICT
+import synapseclient
 
 from pathlib import Path
 import sys

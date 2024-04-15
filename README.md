@@ -23,7 +23,7 @@
 
 ## Preparation 
 ### Naming Constraint
-Naming of PCI videos should *include participant names and time point at the least* in order to select the best camera angle for each session. This is implemented in 3.0_CombinedHeadPose>combined_analysis.py.
+Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in 3.0_CombinedHeadPose>combined_analysis.py.
 
 ### Specifying folder location
 Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed.

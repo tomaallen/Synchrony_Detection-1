@@ -23,12 +23,12 @@ from pathlib import Path
 #         video_info
 # ----------------------------------------------------------------------
 
-FOLDER = Path("D:\\Complete_Dataset")  # XXX: edit this path,   "D:\\temp_br_test"
+FOLDER = Path("D:\\temp_br_test")  # XXX: edit this path,     "D:\\Complete_Dataset"
 HEAD_FOLDER = FOLDER / "head_output"
 POSE_FOLDER = FOLDER / "pose_output"
 ANALYSIS_FOLDER = FOLDER / "analysis_info"
 FRAME_CHECKS = ANALYSIS_FOLDER / "frame_checks"
-BEST_CAMERAS = ANALYSIS_FOLDER / "best_cameras.csv"
+BEST_CAMERAS = ANALYSIS_FOLDER / "best_cameras"
 MODEL1_FOLDER = FOLDER / "cross_corr" # fps automatically appended to this name
 MODEL2_FOLDER = FOLDER / "mdrqa" # fps automatically appended to this name
 

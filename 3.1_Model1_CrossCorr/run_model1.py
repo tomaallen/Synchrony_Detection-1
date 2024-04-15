@@ -47,6 +47,7 @@ if __name__ == '__main__':
                                         ['RShoulder', 'RElbow'],
                                         ['Nose', 'LEar'],
                                         ['Nose', 'REar']])
+    best_cam_list.to_csv(str(settings.BEST_CAMERAS) + "_model1.csv")
 
     # output headers
     res_rows = [["video",

@@ -103,7 +103,7 @@ def get_best_cams(checks:list):
     # proportion of good frames across keypoints (no dependency on both keypoints 
     # being present).
 
-    # TODO: run this multicore
+    # run multicore
     pool = mp.Pool(mp.cpu_count())
     args = [(x, checks) for x in os.listdir(settings.FRAME_CHECKS)]
     results = list(pool.starmap(analysis_sequence, tqdm(args, total=len(args))))
@@ -113,19 +113,6 @@ def get_best_cams(checks:list):
         camera_scores.append(result)
         # TODO: save to individual csvs as you go?
 
-    # single core
-    # camera_scores = []
-    # for frame_check in os.listdir(settings.FRAME_CHECKS):
-    #     print('Data quality check for ' + frame_check)
-
-    #     # for each csv file in settings.FRAME_CHECKS, generate a quality score from keypoint detections
-    #     data_quality = pd.read_csv(os.path.join(settings.FRAME_CHECKS, frame_check), index_col=0)
-    #     quality_score, _perfect_frames = data_quality_check(data_quality, checks)
-
-    #     ppt = get_ppt(frame_check) # get participant from filename
-    #     tp = get_tp(frame_check) # get timepoint from filename
-    #     camera_scores.append([os.path.splitext(frame_check)[0], ppt, tp, quality_score])
-
     # save camera quality scores for all cameras
     camera_scores = pd.DataFrame(camera_scores, columns=['Filename', 'ppt', 'tp', 'QualityScore'])
     camera_scores.to_csv(settings.ANALYSIS_FOLDER / "model1_camera_scores.csv")
@@ -134,7 +121,6 @@ def get_best_cams(checks:list):
     # find the best camera for each session (participant and timepoint)
     best_cams_idx = list(camera_scores.groupby(['ppt', 'tp'])['QualityScore'].idxmax())
     best_cams = camera_scores.iloc[best_cams_idx]
-    best_cams.to_csv(str(settings.BEST_CAMERAS))
 
     return best_cams # .Filename
 

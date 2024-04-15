@@ -14,3 +14,7 @@ __pycache__/
 2_PoseDetection/lib/
 2_PoseDetection/models/
 2_PoseDetection/include/
+
+# BR only code specific to Tom's work
+# 3.0_CombineHeadPose/model1_qualcheck_temp.py
+# 3.1_Model1_CrossCorr/run_model1_BR.py

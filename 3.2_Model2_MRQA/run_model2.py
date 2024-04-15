@@ -76,6 +76,7 @@ if __name__ == '__main__':
 
 	# choose the camera with the most good frames for each participant and timepoint
 	best_cam_list = dqc.get_best_cams([['Nose', 'Neck']])
+	best_cam_list.to_csv(str(settings.BEST_CAMERAS) + "_model2.csv")
 
 	# output headers
 	use_points = [0, 1]  # FIXME: use Nose and Neck only for analysis - make it an arg?
