@@ -1,7 +1,7 @@
 import copy
 import os
 import sys
-import reaching_const
+import constants
 import numpy as np
 import json
 from scipy.signal import savgol_filter
@@ -23,21 +23,21 @@ from scipy.optimize import linear_sum_assignment
 #  - ...
 
 def update_prefix():
-    reaching_const.ORIGINAL_VIDEO_NAME = os.path.basename(
-        reaching_const.INPUT_FOLDER)
-    reaching_const.PREFIX = os.path.basename(reaching_const.INPUT_FOLDER) + '-'
+    constants.ORIGINAL_VIDEO_NAME = os.path.basename(
+        constants.INPUT_FOLDER)
+    constants.PREFIX = os.path.basename(constants.INPUT_FOLDER) + '-'
 
     # "D:\\Temp C\\Users\\Home - Jupiter\\Desktop\\Brazil\\029_15_07_2022_C2"
     # 'Temp Data\\LP016_PCI' # "C:\\Users\\Home - Jupiter\\Desktop\\coordination\\LP031_PCI"  #
-    reaching_const.YOLO_INPUT_FOLDER = reaching_const.INPUT_FOLDER
+    constants.YOLO_INPUT_FOLDER = constants.INPUT_FOLDER
     # OUTPUT_FOLDER is normally the same "Parent dir"
-    reaching_const.OUTPUT_FOLDER = reaching_const.INPUT_FOLDER
+    constants.OUTPUT_FOLDER = constants.INPUT_FOLDER
     # "C:\\Users\\Home - Jupiter\\Desktop\\DATA_HUB\\output_files_leap\\LP012_SyncCam_STT_Demo"
 
-    reaching_const.ORIGINAL_VIDEO_NAME = os.path.basename(reaching_const.INPUT_FOLDER)
+    constants.ORIGINAL_VIDEO_NAME = os.path.basename(constants.INPUT_FOLDER)
     # 'Camcorder 1_Eval room_STT.avi'  #  Note: include the
     # file extension #
-    reaching_const.PREFIX = os.path.basename(reaching_const.INPUT_FOLDER) + '-'
+    constants.PREFIX = os.path.basename(constants.INPUT_FOLDER) + '-'
     # ORIGINAL_VIDEO_NAME[:ORIGINAL_VIDEO_NAME.rindex('.')] + '_'
 
 
@@ -97,7 +97,7 @@ def excel_file_path(input_folder):
 
 def file_path_giving_folder(directory="output_videos", parent_dir=None):
     if parent_dir is None:
-        parent_dir = reaching_const.INPUT_FOLDER
+        parent_dir = constants.INPUT_FOLDER
     json_folder = os.path.join(parent_dir, directory)
     if not os.path.exists(json_folder):
         print('The folder', str(json_folder), 'does not exists!')

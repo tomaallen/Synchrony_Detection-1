@@ -7,14 +7,13 @@ __pycache__/
 *.pt
 
 # Specific YOLO folders
-1_HeadDetection/runs/
+head_detection/runs/
 
 # Specific OpenPose folders
-2_PoseDetection/bin/
-2_PoseDetection/lib/
-2_PoseDetection/models/
-2_PoseDetection/include/
+pose_detection/bin/
+pose_detection/lib/
+pose_detection/models/
+pose_detection/include/
 
 # BR only code specific to Tom's work
-# 3.0_CombineHeadPose/model1_qualcheck_temp.py
-# 3.1_Model1_CrossCorr/run_model1_BR.py
+synchrony_analysis/run_model1_BR.py

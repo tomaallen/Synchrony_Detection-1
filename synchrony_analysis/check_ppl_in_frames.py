@@ -1,6 +1,6 @@
 import numpy as np
 
-def filter_dict(initial_dict, conf_threshold):
+def check_ppl_in_frames(initial_dict, conf_threshold):
     # This function filters the dictionary by removing the frames where there are more than 2 ppl and where there is not mom-baby pair detected
     # It also returns whether each keypoint is above confidence threshold for both mum and baby in each frame
     

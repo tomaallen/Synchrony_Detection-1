@@ -1,5 +1,4 @@
 import os
-import reaching_const
 import numpy as np
 
 import utils

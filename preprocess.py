@@ -30,3 +30,22 @@ for vid in os.listdir(settings.FOLDER):
     vid_path = os.path.join(settings.FOLDER, vid)
     print(vid_path.replace(" ","_"))
     os.rename(vid_path, vid_path.replace(" ","_"))
+
+
+# %%
+import os
+from glob import glob
+import shutil
+
+FOLDER = "D:\\BRAINRISE\\Batch_2"
+target_location = "D:\\new"
+os.makedirs(target_location, exist_ok=True)
+for file in glob(FOLDER + "\\pose_detect_output\\*\\json_files\\*-PD-combined_output.json")[:10]:
+    print(file)
+    shutil.copyfile(file, target_location + "\\" + os.path.basename(file))
+
+for file in glob(FOLDER + "\\pose_detect_output\\*\\video_info\\*.txt")[:10]:
+    print(file)
+    shutil.copyfile(file, target_location + "\\" + file.split("\\")[-3] + ".txt")
+
+# %%

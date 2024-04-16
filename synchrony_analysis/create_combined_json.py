@@ -2,7 +2,7 @@ import copy
 import json
 import numpy as np
 import os
-import reaching_const
+import constants
 import utils
 from utils import ComplexEncoder, assign_points
 from human_properties import Person, average_multi_person_ma, body_base_distance
@@ -40,7 +40,7 @@ def read_csv(filename=None):
             os.makedirs(os.path.join(input_folder, "matlab_files", str(_id)))
 
         savemat(os.path.join(input_folder, "matlab_files", str(_id),
-                             os.path.basename(input_folder) + '-' + reaching_const.MATLAB_RAW_DATA_FILE), {'Face': _data})
+                             os.path.basename(input_folder) + '-' + constants.MATLAB_RAW_DATA_FILE), {'Face': _data})
     return df
 
 
@@ -135,7 +135,7 @@ def poses_for_frames(list_of_frames=None, output_json_folder=None, json_score_on
     json_file = utils.file_path_giving_folder("json_files", parent_dir=input_folder)
     # load the json file into a dictionary
     for _file in json_file:
-        if reaching_const.JSON_FILE in _file:
+        if constants.JSON_FILE in _file:
             print(_file)
             with open(_file, 'r') as f:
                 json_data = json.load(f)
@@ -146,7 +146,7 @@ def poses_for_frames(list_of_frames=None, output_json_folder=None, json_score_on
         list_of_frames = range(0 + 1, no_csv_files + 1)
 
     print(list_of_frames)
-    face_dict = read_matlab_yolo(data_type=reaching_const.MATLAB_RAW_DATA_FILE)
+    face_dict = read_matlab_yolo(data_type=constants.MATLAB_RAW_DATA_FILE)
     face_data = []
     for _id in ['0', '1']:
         face_data.append(face_dict[_id])
@@ -154,11 +154,11 @@ def poses_for_frames(list_of_frames=None, output_json_folder=None, json_score_on
     scores_frames = get_score_for_persons_based_on_face(list_of_frames, json_data, json_score_only, face_data)
 
     if json_score_only == 1:
-        suf_name = reaching_const.JSON_SCORE_FILE
+        suf_name = constants.JSON_SCORE_FILE
     elif json_score_only == 2:
-        suf_name = reaching_const.JSON_SCORE_FILE_2
+        suf_name = constants.JSON_SCORE_FILE_2
     else:
-        suf_name = reaching_const.JSON_COMBINED_FILE
+        suf_name = constants.JSON_COMBINED_FILE
 
     if output_json_folder is None:
         output_json_folder = os.path.join(input_folder, "json_files")
@@ -170,7 +170,7 @@ def poses_for_frames(list_of_frames=None, output_json_folder=None, json_score_on
     # print(data)
 
 
-def read_matlab_yolo(data_type=reaching_const.MATLAB_RAW_DATA_FILE, save_face=False):
+def read_matlab_yolo(data_type=constants.MATLAB_RAW_DATA_FILE, save_face=False):
     frame_width, frame_height, frame_fps, total_no_frames = utils.read_video_info(input_folder)
     print(frame_width, frame_height)
     face_data = {}
@@ -183,7 +183,7 @@ def read_matlab_yolo(data_type=reaching_const.MATLAB_RAW_DATA_FILE, save_face=Fa
         face_data[_id] = arr
         if save_face:
             savemat(os.path.join(input_folder, "matlab_files", str(_id),
-                                 os.path.basename(input_folder) + '-' + reaching_const.MATLAB_FACE_TO_OPENPOSE), {'Face': arr})
+                                 os.path.basename(input_folder) + '-' + constants.MATLAB_FACE_TO_OPENPOSE), {'Face': arr})
     # print(face_data)
     # input()
 
