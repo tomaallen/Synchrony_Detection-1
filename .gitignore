@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models
+*.pt
+
+# Specific YOLO folders
+head_detection/runs/
+
+# Specific OpenPose folders
+pose_detection/bin/
+pose_detection/lib/
+pose_detection/models/
+pose_detection/include/
+
+# BR only code specific to Tom's work
+synchrony_analysis/run_model1_BR.py

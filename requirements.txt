@@ -45,6 +45,9 @@ chardet
 # for 2_z_per_frame_id__use_yolo_face
 filterpy
 
+# for MdRQA analysis
+multiSyncPy
+
 
 
 
