@@ -91,64 +91,64 @@ To run model 1:
 
 
 ## Model Overview
-Model 3 uses the concept of transfer entropy as a statistical metric to create a connectivity network between the baby and mom’s key point velocities. 
-Transfer entropy determines the amount of information (asymmetric) transferred between two processes.  Afterwards, the density and strength metrics are extracted, based on graph theory, to obtain a quantitative measure of the network architecture.
-These metrics will give an idea of how many and how solid the connections are between different key points on average.  
-The model focuses on the nose, neck, right wrist, right elbow, left wrist, and left elbow key points, since they contain the most significant and reliable information for the analysis.
-Model 3 data input are the JSON files retrieved from the head and body detection (points 1, 2 and 3.0).
+Model 3 uses the concept of transfer entropy as a statistical metric to create a connectivity network between the baby and mom’s key point velocities. <br>
+Transfer entropy determines the amount of information (asymmetric) transferred between two processes.  Afterwards, the density and strength metrics are extracted, based on graph theory, to obtain a quantitative measure of the network architecture. <br>
+These metrics will give an idea of how many and how solid the connections are between different key points on average. <br>
+The model focuses on the nose, neck, right wrist, right elbow, left wrist, and left elbow key points, since they contain the most significant and reliable information for the analysis. <br>
+Model 3 data input are the JSON files retrieved from the head and body detection (points 1, 2 and 3.0). <br>
 
 ## How to run the code
 Navigate inside the folder synchrony_analysis:
 - `cd “C:\your\path\to\synchrony_analysis”` <br><br>
-Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps:
-i.e.:
+Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
+i.e.: <br>
 - `python transfer_entropy_connectivity_network.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
-Since the process is completely automatised and will run over all the participants' folders that have to be analysed, it is fundamental to have a maximum of 30 participant folders (each of them will have 2/3 recordings) inside the root directory.
-Too many participant folders inside the root directory will exponentially increase the computational time due to the elevated number of permutation sets created (explained in detail in the Scripts and Output Explanation section). 
-If more than 30 participants have to be analysed, split the analysis in different root folders containing <30 participants.
+Since the process is completely automatised and will run over all the participants' folders that have to be analysed, it is fundamental to have a maximum of 30 participant folders (each of them will have 2/3 recordings) inside the root directory. <br>
+Too many participant folders inside the root directory will exponentially increase the computational time due to the elevated number of permutation sets created (explained in detail in the Scripts and Output Explanation section). <br>
+If more than 30 participants have to be analysed, split the analysis in different root folders containing <30 participants. <br>
 
  ## Scripts and Output Explanation
 
-The main Model 3 script is  transfer_entropy_connectivity_network.py: it can be divided into 3 sections for an easier analysis:
+The main Model 3 script is  transfer_entropy_connectivity_network.py: it can be divided into 3 sections for an easier analysis: <br>
 ### 1.	Epoch Check – retrieves the number of good epochs keeping in mind that:
 
-good frame = frame containing mom-baby and pose detections with an acceptable confidence score
-epoch = set of continuous good frames
-good epoch = epoch with at least 3 seconds of good frames 
+good frame = frame containing mom-baby and pose detections with an acceptable confidence score <br>
+epoch = set of continuous good frames <br>
+good epoch = epoch with at least 3 seconds of good frames <br>
 
 This number is strongly dependent on the recording’s fps (i.e. the threshold will be set to >90  for 3 seconds consecutive good frames for fps = 30).
-The result of this first section is a .xlsx file pointing out, for each file, the # of Total frames, # of Discarded frames, # of Good frames, # Total epochs, and # Good epochs (for 3/5 seconds).
+The result of this first section is a .xlsx file pointing out, for each file, the # of Total frames, # of Discarded frames, # of Good frames, # Total epochs, and # Good epochs (for 3/5 seconds). <br>
 
 ### 2.	Transfer Entropy and P-Values – evaluates adjacency matrices with the transfer entropy method, creates the permutation sets for the normal distributions, and computes the P-Values.
 
 #### 2.1  
-Baby’s and mom’s key points velocities are computed for selected key points (nose, neck, right wrist, right elbow, left wrist, left elbow) using key points positions retrieved from the JSON files (modules 1, 2, 3.0). 
+Baby’s and mom’s key points velocities are computed for selected key points (nose, neck, right wrist, right elbow, left wrist, left elbow) using key points positions retrieved from the JSON files (modules 1, 2, 3.0). <br>
 Folders called baby_velocities and mom_velocities are automatically created, containing .txt velocities files for each participant file analysed.
-Each .txt file is a list of velocities divided by key point and by epoch.
+Each .txt file is a list of velocities divided by key point and by epoch. <br>
 
 #### 2.2
-Adjacency matrices (6x6 matrices, one for each epoch) with the transfer entropy method are now created.
-Each element of the matrix is computed by applying the transfer entropy formula between one mom’s velocity vector and one baby’s velocity vector.
+Adjacency matrices (6x6 matrices, one for each epoch) with the transfer entropy method are now created. <br>
+Each element of the matrix is computed by applying the transfer entropy formula between one mom’s velocity vector and one baby’s velocity vector. <br>
 
-Fig.1 shows how the matrix is composed: the x-axis stores the mom’s key points velocities values, and the y-axis stores the baby’s ones. 
-Transfer entropy adjacency matrices have been evaluated for both baby-mom and mom-baby directions.
-Folders called baby-mom_te and mom-baby_te are automatically created, containing .txt files with all the possible combinations of matrices among the participants' files stored in the root directory.  
+Fig.1 shows how the matrix is composed: the x-axis stores the mom’s key points velocities values, and the y-axis stores the baby’s ones. <br>
+Transfer entropy adjacency matrices have been evaluated for both baby-mom and mom-baby directions. <br>
+Folders called baby-mom_te and mom-baby_te are automatically created, containing .txt files with all the possible combinations of matrices among the participants' files stored in the root directory.  <br>
 Fig. 1
 
 #### 2.3
-Normal distributions and P-values are built.
-Permutation sets  are created using the Partner shuffling technique (one permutation set contains the transfer entropy adjacency matrix of a babyN-momN  couple + the transfer entropy adjacency matrices of all the remaining combinations of couples not containing babyN-momN).
+Normal distributions and P-values are built. <br>
+Permutation sets  are created using the Partner shuffling technique (one permutation set contains the transfer entropy adjacency matrix of a babyN-momN  couple + the transfer entropy adjacency matrices of all the remaining combinations of couples not containing babyN-momN). <br>
 
-The random distribution is now evaluated using the mean and standard deviation of the permutation sets. P-values can now be computed.
+The random distribution is now evaluated using the mean and standard deviation of the permutation sets. P-values can now be computed. <br>
 
-Folders called baby-mom_subsets and mom-baby_subsets are automatically created and they contain all the permutations sets. 
-baby-mom_pvalues and mom-baby_pvalues folders are also created containing P-values matrices (1 matrix for each epoch, only 3 epochs per participant are considered) for each participant file.
+Folders called baby-mom_subsets and mom-baby_subsets are automatically created and they contain all the permutations sets. <br>
+baby-mom_pvalues and mom-baby_pvalues folders are also created containing P-values matrices (1 matrix for each epoch, only 3 epochs per participant are considered) for each participant file. <br>
 
 
 ### 3.	Graph Parameters – Strength and Density are retrieved.
-For each participant file, 3 graphs (for the 3 epochs contained in the .txt file) are built and the graph metrics of Strength and Density are computed.
+For each participant file, 3 graphs (for the 3 epochs contained in the .txt file) are built and the graph metrics of Strength and Density are computed. <br>
 In each graph the body key points represent the graph nodes and the connectivity values (weighted graph) are the graph edges.
-All the matrices are not symmetrical but directional.
+All the matrices are not symmetrical but directional. <br>
 The final outputs are two .txt files (GraphMetrics_baby-mom and GraphMetrics_mom-baby) containing the Density and Strength values for each epoch for each participant couple.
 
 
