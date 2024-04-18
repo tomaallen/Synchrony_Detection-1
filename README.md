@@ -133,7 +133,7 @@ Each element of the matrix is computed by applying the transfer entropy formula 
 Fig.1 shows how the matrix is composed: the x-axis stores the mom’s key points velocities values, and the y-axis stores the baby’s ones. <br>
 Transfer entropy adjacency matrices have been evaluated for both baby-mom and mom-baby directions. <br>
 Folders called baby-mom_te and mom-baby_te are automatically created, containing .txt files with all the possible combinations of matrices among the participants' files stored in the root directory.  <be>
-<img src="https://github.com/isabella-sole/Synchrony_Detection/blob/main/te%20matrix.png" alt="" width="500" height="500">
+<img src="https://github.com/isabella-sole/Synchrony_Detection/blob/main/te%20matrix.png" alt="" width="800" height="800">
 
 
 Fig. 1
