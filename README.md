@@ -97,7 +97,7 @@ These metrics will give an idea of how many and how solid the connections are be
 The model focuses on the nose, neck, right wrist, right elbow, left wrist, left elbow key points, since they contain the most significant and reliable information for the analysis.
 Model 3 data input are the Json files retrieved from the head and body detection (point 1, 2 and 3.0).
 
-## How to run the code:
+## How to run the code
 Navigate inside the folder synchrony_analysis:
 cd “C:\your\path\to\synchrony_analysis”
 Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the Json files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps:
@@ -110,7 +110,7 @@ If more than 30 participants have to be analysed, split the analysis in differen
  ## Scripts and Output Explanation
 
 The main Model 3 script is  transfer_entropy_connectivity_network.py: it can be divided into 3 sections for an easier analysis:
-# 1.	Epoch Check – retrieves the number of good epochs keeping in mind that:
+### 1.	Epoch Check – retrieves the number of good epochs keeping in mind that:
 
 good frame = frame containing mom-baby and pose detections with an acceptable confidence score
 epoch = set of continuous good frames
@@ -119,7 +119,7 @@ good epoch = epoch with least 3 seconds of good frames
 This number is strongly dependent on the recording’s fps (i.e. the threshold will be set to >90  for 3 seconds consecutive good frames for fps = 30).
 The result of this first section is a .xlsx file pointing out, for each file, the # of Total frames, # of Discarded frames, # of Good frames, # Total epochs, # Good epochs (for 3/5 seconds).
 
-# 2.	Transfer Entropy and P-Values – evaluates adjacency matrices with transfer entropy method, creates the permutation sets for the normal distributions, computes the P-Values.
+### 2.	Transfer Entropy and P-Values – evaluates adjacency matrices with transfer entropy method, creates the permutation sets for the normal distributions, computes the P-Values.
 
 2.1 
 Baby’s and mom’s key points velocities are computed for selected key points (nose, neck, right wrist, right elbow, left wrist, left elbow) using key points positions retrieved from the Json files (modules 1, 2, 3.0). 
@@ -145,7 +145,7 @@ Folders called baby-mom_subsets and mom-baby_subsets are automatically created a
 baby-mom_pvalues and mom-baby_pvalues folders are also created containing P-values matrices (1 matrix for each epoch, only 3 epochs per participant are considered) for each participant file.
 
 
-# 3.	Graph Parameters – Strength and Density are retrieved.
+### 3.	Graph Parameters – Strength and Density are retrieved.
 For each participant file, 3 graphs (for the 3 epochs contained in the .txt file) are built and the graph metrics of Strength and Density are computed.
 In each graph the body key points represent the graph nodes and the connectivity values (weighted graph) are the graph edges.
 All the matrices are not symmetrical but directional.
