@@ -26,8 +26,8 @@
 Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in synchrony_analysis\combined_analysis.py.
 
 ### Specifying folder location
-Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed.
-	- **ESSENTIAL: Open settings.py and change FOLDER to your folder location.**
+Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed. <br>
+**ESSENTIAL: Open settings.py and change FOLDER to your folder location.**
 
 ## 1. Face Detection 
 Open an anaconda terminal and type:
@@ -47,22 +47,22 @@ Open a new anaconda prompt and type:
 Run the script and wait for the results to be saved.
 
 ## 3.0. Combined Analysis
-The combined analysis script does three things
+The combined analysis script does two things
 1. Copies the head/face csv file to the pose output folder
 1. Generates a combined json file in the pose output folder, with id-assigned skeletons
 
-Then open a new anaconda prompt and type:
+Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\synchrony_analysis` <br><br>
 - `python combined_analysis.py`
 
-Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv
-A basic summary of camera angle quality can be found in {settings.FOLDER}\analysis_info\data_quality.csv
+Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv. A basic summary of video quality for each recording can be found in {settings.FOLDER}\analysis_info\data_quality.csv.
 
 **Before running any models:**
 - Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames (or Synapse metadata)
 	- This is crucial in selecting the best camera angle from each session
-- Each model has a different data quality check depending on the model parameters
+	- If you do not have multiple timepoints, make get_tp() return '1' for all videos
+- Each model has a different data quality check depending on the model parameters and which key-points are utilised
 	- All are implemented with data_quality_check() in data_quality_check.py
 - The best cameras from each session are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
 
@@ -87,11 +87,9 @@ To run model 1:
 
 ## 3.2. Model 2 - MdRQA
 
-For Model 2, a Multi-dimensional Recurrence Quantification Analysis approach has been implemented (MdRQA) as a complementary approach to analysing non-linear contingencies between maternal and infant pose and movement patterns. Model 2 pairs with our existing head and pose detection algorithms to generate new synchrony metrics. MdRQA assesses non-linear patterns of recurrence not considered by linear cross-correlations in Model 1. We are focussing our analysis on nose and neck keypoints, as we consider these important indicators of adult-infant engagement and dynamics. <br>
+For Model 2, a Multi-dimensional Recurrence Quantification Analysis (MdRQA - Wallot, Roepstorff and Monster, 2016) approach has been implemented. Whilst model 1 considers linear relationships between mother and infant pose signals, MdRQA offers a complementary approach by taking into account non-linear contingencies between maternal and infant pose and movement. MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time. The key concept of MdRQA is to quantify patterns of recurrence which are related to the dynamic characteristics of a multivariate system. MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. The basis of the RQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted. We focus our analysis on nose and neck keypoints, as we consider these important indicators of adult-infant engagement and dynamics.
 
- MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time. The key concept of MdRQA, is recurrence, meaning how the variables of interest repeat their values over time. MdRQA quantifies patterns of repetitions, which—depending on the interpretation of the analysis—are related to the dynamic characteristics of a multivariate system or characterize the coordination of a group of variables over time. <br>
-MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. The basis of the RQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted. _cit. (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full)._ <br>
-
+Wallot, S., Roepstorff, A., & Mønster, D. (2016). Multidimensional Recurrence Quantification Analysis (MdRQA) for the analysis of multidimensional time-series: A software implementation in MATLAB and its application to group-level data in joint action. Frontiers in psychology, 7, 224211. https://doi.org/10.3389/fpsyg.2016.01835 <br>
 
 ## TO CHANGE
 ## Part One: Python code to produce MRQA analysis inputs
