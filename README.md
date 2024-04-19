@@ -98,7 +98,7 @@ The model focuses on the nose, neck, right wrist, right elbow, left wrist, and l
 Model 3 data input are the JSON files retrieved from the head and body detection (points 1, 2 and 3.0). <br>
 
 ## How to run the code
-Navigate inside the folder synchrony_analysis:
+Navigate inside the folder synchrony_analysis\graph_network:
 - `cd “C:\your path to\synchrony_analysis\graph_network”` <br><br>
 Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
 i.e.: <br>
