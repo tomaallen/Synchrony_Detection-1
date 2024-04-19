@@ -23,7 +23,7 @@
 
 ## Preparation 
 ### Naming Constraint
-Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in 3.0_CombinedHeadPose>combined_analysis.py.
+Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in synchrony_analysis\combined_analysis.py.
 
 ### Specifying folder location
 Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed.
@@ -32,7 +32,7 @@ Videos should be stored in a single flat folder. This can be achieved by using p
 ## 1. Face Detection 
 Open an anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\1_HeadDetection` <br><br>
+- `cd {your path}\Synchrony_Detection\head_detection` <br><br>
 - `python detect_face.py`
 
 Run the script and wait for the results to be saved.
@@ -41,7 +41,7 @@ Run the script and wait for the results to be saved.
 ### Notice that this section can run in parallel with section 1.
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\2_PoseDetection\src` <br><br>
+- `cd {your path}\Synchrony_Detection\pose_detection\src` <br><br>
 - `python detect_pose.py`
 
 Run the script and wait for the results to be saved.
@@ -53,7 +53,7 @@ The combined analysis script does three things
 
 Then open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\3.0_CombineHeadPose` <br><br>
+- `cd {your path}\Synchrony_Detection\synchrony_analysis` <br><br>
 - `python combined_analysis.py`
 
 Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv
@@ -82,7 +82,7 @@ Pose Synchrony Model 1 data consists of 4 metrics:
 
 To run model 1:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\3.1_Model1_CrossCorr` <br><br>
+- `cd {your path}\Synchrony_Detection\synchrony_analysis\cross_correlations` <br><br>
 - `python run_model1.py {your_video_fps}`
 
 ## 3.2. Model 2 - MdRQA
@@ -99,10 +99,10 @@ Model 3 data input are the JSON files retrieved from the head and body detection
 
 ## How to run the code
 Navigate inside the folder synchrony_analysis:
-- `cd “C:\your\path\to\synchrony_analysis”` <br><br>
+- `cd “C:\your path to\synchrony_analysis\graph_networks”` <br><br>
 Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
 i.e.: <br>
-- `python transfer_entropy_connectivity_network.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
+- `python run_model3.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
 Since the process is completely automatised and will run over all the participants' folders that have to be analysed, it is fundamental to have a maximum of 30 participant folders (each of them will have 2/3 recordings) inside the root directory. <br>
 Too many participant folders inside the root directory will exponentially increase the computational time due to the elevated number of permutation sets created (explained in detail in the Scripts and Output Explanation section). <br>
 If more than 30 participants have to be analysed, split the analysis in different root folders containing <30 participants. <br>
