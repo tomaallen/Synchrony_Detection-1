@@ -16,14 +16,14 @@
  	- unzip the downloaded folder
 1. Download models
 	- download: https://drive.google.com/drive/folders/1TUGl__i7x7JJKWsMts-RhyYNeS8UAIr3?usp=sharing
- 	- add best.pt to Synchrony_Detection\\1_HeadDetection\\yolov7-main folder
+ 	- add best.pt to Synchrony_Detection\\head_detection\\yolov7-main folder
 	- drag and drop the models folder into the unzipped openpose folder - this adds additional files to the existing models folder
-1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\2_PoseDetection
+1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\pose_detection
 
 
 ## Preparation 
 ### Naming Constraint
-Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in 3.0_CombinedHeadPose>combined_analysis.py.
+Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in synchrony_analysis\combined_analysis.py.
 
 ### Specifying folder location
 Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed.
@@ -32,7 +32,7 @@ Videos should be stored in a single flat folder. This can be achieved by using p
 ## 1. Face Detection 
 Open an anaconda terminal and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\1_HeadDetection` <br><br>
+- `cd {your path}\Synchrony_Detection\head_detection` <br><br>
 - `python detect_face.py`
 
 Run the script and wait for the results to be saved.
@@ -41,7 +41,7 @@ Run the script and wait for the results to be saved.
 ### Notice that this section can run in parallel with section 1.
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\2_PoseDetection\src` <br><br>
+- `cd {your path}\Synchrony_Detection\pose_detection\src` <br><br>
 - `python detect_pose.py`
 
 Run the script and wait for the results to be saved.
@@ -53,7 +53,7 @@ The combined analysis script does three things
 
 Then open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\3.0_CombineHeadPose` <br><br>
+- `cd {your path}\Synchrony_Detection\synchrony_analysis` <br><br>
 - `python combined_analysis.py`
 
 Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv
@@ -82,9 +82,132 @@ Pose Synchrony Model 1 data consists of 4 metrics:
 
 To run model 1:
 - `conda activate synchrony_detection` <br><br>
-- `cd {your path}\Synchrony_Detection\3.1_Model1_CrossCorr` <br><br>
+- `cd {your path}\Synchrony_Detection\synchrony_analysis\cross_correlations` <br><br>
 - `python run_model1.py {your_video_fps}`
 
 ## 3.2. Model 2 - MdRQA
 
+For Model 2, a Multi-dimensional Recurrence Quantification Analysis approach has been implemented (MdRQA) as a complementary approach to analysing non-linear contingencies between maternal and infant pose and movement patterns. Model 2 pairs with our existing head and pose detection algorithms to generate new synchrony metrics. MdRQA assesses non-linear patterns of recurrence not considered by linear cross-correlations in Model 1. We are focussing our analysis on nose and neck keypoints, as we consider these important indicators of adult-infant engagement and dynamics. <br>
+
+ MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time. The key concept of MdRQA, is recurrence, meaning how the variables of interest repeat their values over time. MdRQA quantifies patterns of repetitions, which—depending on the interpretation of the analysis—are related to the dynamic characteristics of a multivariate system or characterize the coordination of a group of variables over time. <br>
+MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. The basis of the RQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted. _cit. (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full)._ <br>
+
+
+## TO CHANGE
+## Part One: Python code to produce MRQA analysis inputs
+This section uses as input the .json combined files produces in the previous modules. <br>
+### Code description: <br>
+**main_discarded_frames.py** <br>  
+This script takes as inputs the .json combined file containing info about mom's and baby's faces and bodies. <br>
+It checks which frames are ok to work with and which are not for each dataset following this criteria: <br>
+- a frame should contain at least two people <br>
+- there sohuld be a couple mom-baby in the frame <br>
+- mom and baby selected keypoints must score a selected confidence level <br>
+<br>
+The scipt discarded the frames that are not good and outputs an excel file for each dataset containing the following information:<br>
+- total number of frames <br>
+- how many good frames <br>
+- how many bad frames <br><br>
+*This is used as preliminary analysis.* <br><br>
+
+**main_input_data_process.py** <br>
+This script produces an excel file for each dataset that is going to be the input of the MRQA. <br>
+Each excel file row represents a video frame and the columns are the selected kwypoints x and y coordinates for (i.e. Neck and Nose) for both mom and baby. <br>
+If the frames is a bad one (does not fit the criteria previously explained) a line of NaNs is displayed. <br>
+<br>
+**functions.py** <br>
+This file contains all the functions to run the two main scripts. <br>
+<br>
+### Run the code 
+**Preliminary analysis for your dataset:**
+- open the script *python main_discarded_frames.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored and change the **workbook** parameters with the name you want to assign to the excel file <br><br>
+- `cd pathToYourFolder`<br><br>
+- `python main_discarded_frames.py` <br><br>
+
+**MRQA input preparation:**
+- open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.<br><br>
+- `cd pathToYourFolder`<br><br>
+- `python main_discarded_frames.py` <br><br>
+
+### Results  
+The *python main_discarded_frames.py* script produces one Excel file with the results of all the datasets analyzed.<br>
+Each row of the file contains the total amount of frames, the # of good frames, and the # of bad frames of the analyzed dataset. <br> 
+<br>
+The *python main_discarded_frames.py* script produces one Excel file for each dataset.<br>
+Each row of the file contains the x and y coordinates of the selected key points (for both mom and by) in a specific frame.
+
+
+## Part two: Matlab code to run the MRQA analysis ###
+
+
+
 ## 3.3 Model 3 - Graph Networks
+
+
+## Model Overview
+Model 3 uses the concept of transfer entropy as a statistical metric to create a connectivity network between the baby and mom’s key point velocities. <br>
+Transfer entropy determines the amount of information (asymmetric) transferred between two processes.  Afterwards, the density and strength metrics are extracted, based on graph theory, to obtain a quantitative measure of the network architecture. <br>
+These metrics will give an idea of how many and how solid the connections are between different key points on average. <br>
+The model focuses on the nose, neck, right wrist, right elbow, left wrist, and left elbow key points, since they contain the most significant and reliable information for the analysis. <br>
+Model 3 data input are the JSON files retrieved from the head and body detection (points 1, 2 and 3.0). <br>
+
+## How to run the code
+Navigate inside the folder synchrony_analysis\graph_network:
+- `cd “C:\your path to\synchrony_analysis\graph_network”` <br><br>
+Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
+i.e.: <br>
+- `python run_model3.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
+Since the process is completely automatised and will run over all the participants' folders that have to be analysed, it is fundamental to have a maximum of 30 participant folders (each of them will have 2/3 recordings) inside the root directory. <br>
+Too many participant folders inside the root directory will exponentially increase the computational time due to the elevated number of permutation sets created (explained in detail in the Scripts and Output Explanation section). <br>
+If more than 30 participants have to be analysed, split the analysis in different root folders containing <30 participants. <br>
+
+ ## Scripts and Output Explanation
+
+The main Model 3 script is  transfer_entropy_connectivity_network.py: it can be divided into 3 sections for an easier analysis: <br>
+### 1.	Epoch Check – retrieves the number of good epochs keeping in mind that:
+
+good frame = frame containing mom-baby and pose detections with an acceptable confidence score <br>
+epoch = set of continuous good frames <br>
+good epoch = epoch with at least 3 seconds of good frames <br>
+
+This number is strongly dependent on the recording’s fps (i.e. the threshold will be set to >90  for 3 seconds consecutive good frames for fps = 30).
+The result of this first section is a .xlsx file pointing out, for each file, the # of Total frames, # of Discarded frames, # of Good frames, # Total epochs, and # Good epochs (for 3/5 seconds). <br>
+
+### 2.	Transfer Entropy and P-Values – evaluates adjacency matrices with the transfer entropy method, creates the permutation sets for the normal distributions, and computes the P-Values.
+
+#### 2.1  
+Baby’s and mom’s key points velocities are computed for selected key points (nose, neck, right wrist, right elbow, left wrist, left elbow) using key points positions retrieved from the JSON files (modules 1, 2, 3.0). <br>
+Folders called baby_velocities and mom_velocities are automatically created, containing .txt velocities files for each participant file analysed.
+Each .txt file is a list of velocities divided by key point and by epoch. <br>
+
+#### 2.2
+Adjacency matrices (6x6 matrices, one for each epoch) with the transfer entropy method are now created. <br>
+Each element of the matrix is computed by applying the transfer entropy formula between one mom’s velocity vector and one baby’s velocity vector. <br>
+
+Fig.1 shows how the matrix is composed: the x-axis stores the mom’s key points velocities values, and the y-axis stores the baby’s ones. <br>
+Transfer entropy adjacency matrices have been evaluated for both baby-mom and mom-baby directions. <br>
+Folders called baby-mom_te and mom-baby_te are automatically created, containing .txt files with all the possible combinations of matrices among the participants' files stored in the root directory.  <be>
+<img src="https://github.com/isabella-sole/Synchrony_Detection/blob/main/te%20matrix.png" alt="" width="650" height="650">
+
+
+Fig. 1
+
+#### 2.3
+Normal distributions and P-values are built. <br>
+Permutation sets  are created using the Partner shuffling technique (one permutation set contains the transfer entropy adjacency matrix of a babyN-momN  couple + the transfer entropy adjacency matrices of all the remaining combinations of couples not containing babyN-momN). <br>
+
+The random distribution is now evaluated using the mean and standard deviation of the permutation sets. P-values can now be computed. <br>
+
+Folders called baby-mom_subsets and mom-baby_subsets are automatically created and they contain all the permutations sets. <br>
+baby-mom_pvalues and mom-baby_pvalues folders are also created containing P-values matrices (1 matrix for each epoch, only 3 epochs per participant are considered) for each participant file. <br>
+
+
+### 3.	Graph Parameters – Strength and Density are retrieved.
+For each participant file, 3 graphs (for the 3 epochs contained in the .txt file) are built and the graph metrics of Strength and Density are computed. <br>
+In each graph the body key points represent the graph nodes and the connectivity values (weighted graph) are the graph edges.
+All the matrices are not symmetrical but directional. <br>
+The final outputs are two .txt files (GraphMetrics_baby-mom and GraphMetrics_mom-baby) containing the Density and Strength values for each epoch for each participant couple.
+
+
+
+

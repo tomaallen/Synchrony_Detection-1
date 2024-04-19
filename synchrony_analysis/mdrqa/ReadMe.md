@@ -1,10 +1,11 @@
 # Model 2 MRQA
-This folder contains Model 2 of the Synchrony analysis. <br>
-Modules 0_PreprocessForAutomation, 1_FaceDetection, 2_Reaching-Detection are the same and have been run already.
-<br><br>
-Synchrony is checked using the Multidimensional Recurrence Quantification Analysis (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full). <br>
-The toolbox used to evaluate the scores and the images is implemented in Matlab, whereas the input files to run the Matlab toolbox are processed in python.
-<br><br>
+For Model 2, we have implemented Multi-dimensional Recurrence Quantification Analysis (MdRQA, see Appendix A1) as a complementary approach to analysing non-linear contingencies between maternal and infant pose and movement patterns. Model 2 pairs with our existing head and pose detection algorithms to generate new synchrony metrics. MdRQA assesses non-linear patterns of recurrence not considered by linear cross-correlations in Model 1. We are focussing our analysis on nose and neck keypoints, as we consider these important indicators of adult-infant engagement and dynamics. <br>
+
+ MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time. The key concept of MdRQA, is recurrence, meaning how the variables of interest repeat their values over time. MdRQA quantifies patterns of repetitions, which—depending on the interpretation of the analysis—are related to the dynamic characteristics of a multivariate system or characterize the coordination of a group of variables over time. <br>
+MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. The basis of the RQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted. cit. (https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01835/full). <br>
+
+
+
 # Part One: Python code to produce MRQA analysis inputs
 This section uses as input the .json combined files produces in the previous modules. <br>
 ## Code description: <br>
