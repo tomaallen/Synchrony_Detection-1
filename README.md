@@ -99,7 +99,7 @@ Model 3 data input are the JSON files retrieved from the head and body detection
 
 ## How to run the code
 Navigate inside the folder synchrony_analysis:
-- `cd “C:\your path to\synchrony_analysis\graph_networks”` <br><br>
+- `cd “C:\your path to\synchrony_analysis\graph_network”` <br><br>
 Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
 i.e.: <br>
 - `python run_model3.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
