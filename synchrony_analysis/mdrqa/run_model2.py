@@ -72,7 +72,11 @@ if __name__ == '__main__':
 		# want columns 0,1,3,4 = Nose_x, Nose_y, Neck_x, Neck_y
 		matlab_input = pd.DataFrame(
 			np.concatenate((adult[:,[0,1,3,4]], infant[:,[0,1,3,4]]), axis=1),
-			columns=input_headers)
+			columns=input_headers
+		).replace(
+			np.nan,
+			'nan'
+		)
 
 		# save MATLAB inputs into a single folder
 		matlab_input.to_csv(
@@ -80,9 +84,9 @@ if __name__ == '__main__':
 			index=False
 			)
 
-		# TODO: call MATLAB script with fps, input and output folder as args
-		# TODO: change MATLAB window_size to fps*3
-		# TODO: check that blank cells are read as nan by matlab
+	# TODO: call MATLAB script with fps, input and output folder as args
+	# TODO: check that blank cells are read as nan by matlab
+	# TODO: setup dependencies for matlab in the matlab script/requirements.txt/README
 
 
 # %%

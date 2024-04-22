@@ -15,47 +15,62 @@ clear
 clc
 close all
 
-%participant_list = {}; %initializing the participant list to add in the IDs manually
-filenames_list = {};
+addpath 'MdRQA-master\MdRQA-master\' % path to the mdRQA code
+addpath 'mdembedding-master\mdembedding-master\' % embedding estimation parameters path
+
+dataFolder = 'D:\temp_br_test\'; % TODO: pass this as argument
+inputPath = [dataFolder, 'mdrqa_30fps\matlab_inputs\']; % TODO: pass this as argument
+outputPath = [dataFolder, 'mdrqa_30fps\']; % TODO: pass this as argument
+
+fps = 30; % TODO: pass as argument
+USABILITY_THRESHOLD = 35; % changes by dataset
+MAX_LAG = 100;
+MAX_EMBED = 10;
+
+pathPattern = [inputPath, '*.csv']; % this contains best cameras only
+
+% Initialize a cell array of all file paths to analyse
+dirStruct = dir(pathPattern);
+filenames_list = {dirStruct(:).name}; % actually a cell array
+
 
 %% Loading pose data from excel files and storing in structure
 
-addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\BRAINRISE_PCI\Matlab Input' %path for data
-current_filepath = 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\BRAINRISE_PCI\Matlab Input\timepoint3_late_addition\'; %change timepoint as neeeded
+% addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\BRAINRISE_PCI\Matlab Input' %
+% need to add this?
 
 data_size = length(filenames_list);
 
-pose_coordinates_all(data_size) = struct; %holds all the pose coordinates raw data
+pose_coordinates_all(data_size) = struct; % holds all the pose coordinates raw data
 
 for i = 1:length(filenames_list)
-
-    %current_file = dir(strcat(current_filepath,'*',participant_list(i),'*NeckNose.xlsx')); %this is to read all the files in the folder irrespective of Cam used, as long as it ends with NeckNose
     
-    current_filename = strcat(current_filepath, filenames_list{i});
+    current_filename = strcat(inputPath, filenames_list{i});
     disp(current_filename);
 
-    pose_coordinates_current = table2array(readtable(current_filename));     
+    pose_coordinates_current = table2array(readtable(current_filename));
     pose_coordinates_all(i).ID = filenames_list(i);
     pose_coordinates_all(i).data = pose_coordinates_current;
-
+    
+    % TODO: check if this is an issue still
     % adding this because for some weird reason, some of the excel files
     % are actually cells with numbers written as strings in them instead of
     % them being integers in a table.. :(
-    if(iscell(pose_coordinates_current)==0)
-        pose_coordinates_current(any(isnan(pose_coordinates_current),2),:) = [];
-        pose_coordinates_all(i).data_withoutnans = pose_coordinates_current;
-    else
-        pose_coordinates_current = str2double(pose_coordinates_current);
-        pose_coordinates_current(any(isnan(pose_coordinates_current),2),:) = [];
-        pose_coordinates_all(i).data_withoutnans = pose_coordinates_current;
-    end
+
+    % if(iscell(pose_coordinates_current)==0)
+    %     pose_coordinates_current(any(isnan(pose_coordinates_current),2),:) = [];
+    %     pose_coordinates_all(i).data_withoutnans = pose_coordinates_current;
+    % else
+    %     pose_coordinates_current = str2double(pose_coordinates_current);
+    %     pose_coordinates_current(any(isnan(pose_coordinates_current),2),:) = [];
+    %     pose_coordinates_all(i).data_withoutnans = pose_coordinates_current;
+    % end
 
 end
 
 %% Smoothing pose data using different techniques, but sgolay works best so far
 
-data_size = length(pose_coordinates_all);
-window_size = 75; %data is smoothened every 75 frames
+window_size = fps * 3; % data is smoothed every x frames
 
 for i = 1:data_size
 %     pose_coordinates_all(i).smooth_data_movmean = smoothdata(pose_coordinates_all(i).data, "movmean",window_size,"omitnan");
@@ -69,15 +84,13 @@ end
 
 %% Calculating velocities of neck and nose (mum and baby)
 
-step_size = 2; % every 2 frames instantaneous velocity, calculated over 80ms here
+step_size = 2; % every other frame instantaneous velocity
 
-pose_velocities_all(length(pose_coordinates_all)) = struct; %storing all the raw velocities data, calculated from the smoothened pose data
+pose_velocities_all(length(pose_coordinates_all)) = struct; % storing all the raw velocities data, calculated from the smoothened pose data
 
 for i = 1:length(pose_coordinates_all)
     temp_data = pose_coordinates_all(i).smooth_data_sgolay;
-%     if(iscell(temp_data)) 
-%         temp_data = str2double(temp_data); 
-%     end
+
     k = 1;
     for j = 1:step_size:length(temp_data)-1
 
@@ -103,24 +116,21 @@ end
 %% %%%% POSE %%%% : getting the best possible delay and embedding paramaters for the subjects
 
 close all
-addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\mdembedding-master\mdembedding-master' % embedding estimation parameters path
 
-%pose_RQA_parameters(data_size) = struct; %holds all the RQA parameters for pose
+pose_RQA_parameters(data_size) = struct; %holds all the RQA parameters for pose
 
 for i = 1:length(pose_coordinates_all)
      
      pose_RQA_parameters(i).ID = pose_coordinates_all(i).ID;
-   
-     max_lag = 100;  % change based on validity of plots produced!
-     max_embed = 10; % change based on validity of plots produced!
 
      dyadic_pose_data = pose_coordinates_all(i).smooth_data_sgolay;
-     dyadic_pose_data(any(isnan(dyadic_pose_data),2),:) = []; %removing Nans and concatenating the data
+     dyadic_pose_data(any(isnan(dyadic_pose_data),2),:) = []; % removing Nans and concatenating the data
 
      % delay estimation
-     pose_RQA_parameters(i).delay  = mdDelay(dyadic_pose_data, 'maxLag', max_lag, 'plottype', 'all','criterion','localMin');
+     pose_RQA_parameters(i).delay  = mdDelay(dyadic_pose_data, 'maxLag', MAX_LAG, 'plottype', 'all','criterion','localMin');
+
      % embedding dimension estimation
-     [pose_RQA_parameters(i).fnnpercent,  pose_RQA_parameters(i).embeddingDimension] = mdFnn(dyadic_pose_data, round(pose_RQA_parameters(i).delay ),'maxEmb', max_embed);
+     [pose_RQA_parameters(i).fnnpercent,  pose_RQA_parameters(i).embeddingDimension] = mdFnn(dyadic_pose_data, round(pose_RQA_parameters(i).delay ),'maxEmb', MAX_EMBED);
 
 end
 
@@ -136,13 +146,10 @@ end
 
 mean_embed = mean([pose_RQA_parameters.embed_dyad]);
 mean_delay = mean([pose_RQA_parameters.delay]);
-max_embed = max([pose_RQA_parameters.embed_dyad]);
+maxEmbed = max([pose_RQA_parameters.embed_dyad]);
+
 
 %% %%%% POSE %%%% : RUNNING MDRQA recurrence 
-
-addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\MdRQA-master\MdRQA-master' % path to the actual mdRQA code
-
-data_size = length(pose_coordinates_all);
 
 pose_MDRQA_results(data_size) = struct;
 
@@ -161,51 +168,40 @@ for i = 1:data_size
      pose_MDRQA_results(i).final_data_length = length(dyadic_pose_data);
      pose_MDRQA_results(i).usable_percent = 100*(length(dyadic_pose_data)/length(dyadic_data_withnans)); % calculating data usability based on %NaNs
 
-     thresh = 0.3;
+     thresh = 0.3; % TODO: work out what this does
 
      if(pose_MDRQA_results(i).usable_percent > 35) %change usability threshold based on dataset!
 
+     % Warning: Integer operands are required for colon operator when used as index.
      [~, pose_MDRQA_results(i).RESULTS, pose_MDRQA_results(i).PARAMETERS, pose_MDRQA_results(i).b] = MDRQA(dyadic_pose_data,embed,delay,'euc',thresh,1);
      pose_MDRQA_results(i).recpercent = pose_MDRQA_results(i).RESULTS(2);
 
-     % commenting out the other variables for now because not relevant
-     % (since they dont't work with discontinuities in the data)
-%      pose_MDRQA_results(i).diagpercent = pose_MDRQA_results(i).RESULTS(3);
-%      pose_MDRQA_results(i).meanL = pose_MDRQA_results(i).RESULTS(4);
-%      pose_MDRQA_results(i).maxL = pose_MDRQA_results(i).RESULTS(5);
-%      pose_MDRQA_results(i).entropydiag = pose_MDRQA_results(i).RESULTS(6);
-%      pose_MDRQA_results(i).lampercent = pose_MDRQA_results(i).RESULTS(7);
-%      pose_MDRQA_results(i).meanV = pose_MDRQA_results(i).RESULTS(8);
-%      pose_MDRQA_results(i).maxV = pose_MDRQA_results(i).RESULTS(9);
-%      pose_MDRQA_results(i).entropyvert = pose_MDRQA_results(i).RESULTS(10);
-% 
      else
          pose_MDRQA_results(i).recpercent = NaN;
      end
 
 end
 
+
 %% %%%% VELOCITY %%%% : getting the best possible delay and embedding paramaters for the subjects
 
 close all
-addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\mdembedding-master\mdembedding-master' % embedding estimation parameters path
+clear embed
+clear delay
 
 velocity_RQA_parameters(data_size) = struct; %holds all the RQA parameters for velocity data
 
 for i = 1:length(pose_velocities_all)
      
      velocity_RQA_parameters(i).ID = filenames_list{i};
-   
-     max_lag = 100;  % change based on validity of plots produced!
-     max_embed = 10;  % change based on validity of plots produced!
 
      dyadic_velocities_data = transpose([pose_velocities_all(i).neck_velocity_baby;pose_velocities_all(i).nose_velocity_baby;pose_velocities_all(i).neck_velocity_mum;pose_velocities_all(i).nose_velocity_mum]);
      dyadic_velocities_data(any(isnan(dyadic_velocities_data),2),:) = [];
 
      % delay estimation
-     velocity_RQA_parameters(i).delay  = mdDelay(dyadic_velocities_data, 'maxLag', max_lag, 'plottype', 'all','criterion','localMin');
+     velocity_RQA_parameters(i).delay  = mdDelay(dyadic_velocities_data, 'maxLag', MAX_LAG, 'plottype', 'all','criterion','localMin');
      % embedding dimension estimation
-     [velocity_RQA_parameters(i).fnnpercent,  velocity_RQA_parameters(i).embeddingDimension] = mdFnn(dyadic_velocities_data, round(velocity_RQA_parameters(i).delay ),'maxEmb', max_embed);
+     [velocity_RQA_parameters(i).fnnpercent,  velocity_RQA_parameters(i).embeddingDimension] = mdFnn(dyadic_velocities_data, round(velocity_RQA_parameters(i).delay ),'maxEmb', MAX_EMBED);
 
 end
 
@@ -221,14 +217,12 @@ end
 
 mean_embed = mean([velocity_RQA_parameters.embed_dyad]);
 mean_delay = mean([velocity_RQA_parameters.delay]);
-max_embed = max([velocity_RQA_parameters.embed_dyad]);
+maxEmbed = max([velocity_RQA_parameters.embed_dyad]);
+
 
 %% %%%% VELOCITY %%%% :  RUNNING MDRQA recurrence 
 
-addpath 'W:\LEAP_PCI\Singapore_PCI\Pose_RQA\MdRQA-master\MdRQA-master' % path to the actual mdRQA code
 processing_mode = 'Dyadic';
-
-data_size = length(pose_velocities_all);
 
 velocity_MDRQA_results(data_size) = struct;
 
@@ -249,22 +243,11 @@ for i = 1:data_size
 
      thresh = 0.05;
 
-     if(velocity_MDRQA_results(i).usable_percent > 35)  %change usability threshold based on dataset!
+     if(velocity_MDRQA_results(i).usable_percent > USABILITY_THRESHOLD)  %change usability threshold based on dataset!
         
      [~, velocity_MDRQA_results(i).RESULTS, velocity_MDRQA_results(i).PARAMETERS, velocity_MDRQA_results(i).b] = MDRQA(dyadic_velocities_data,embed,delay,'euc',thresh,1);
 
      velocity_MDRQA_results(i).recpercent = velocity_MDRQA_results(i).RESULTS(2);
-
-     % commenting out the other variables for now because not relevant
-     % (since they dont't work with discontinuities in the data)   
-%      velocity_MDRQA_results(i).diagpercent = velocity_MDRQA_results(i).RESULTS(3);
-%      velocity_MDRQA_results(i).meanL = velocity_MDRQA_results(i).RESULTS(4);
-%      velocity_MDRQA_results(i).maxL = velocity_MDRQA_results(i).RESULTS(5);
-%      velocity_MDRQA_results(i).entropydiag = velocity_MDRQA_results(i).RESULTS(6);
-%      velocity_MDRQA_results(i).lampercent = velocity_MDRQA_results(i).RESULTS(7);
-%      velocity_MDRQA_results(i).meanV = velocity_MDRQA_results(i).RESULTS(8);
-%      velocity_MDRQA_results(i).maxV = velocity_MDRQA_results(i).RESULTS(9);
-%      velocity_MDRQA_results(i).entropyvert = velocity_MDRQA_results(i).RESULTS(10);
 
      else
          velocity_MDRQA_results(i).recpercent = NaN;
@@ -273,5 +256,14 @@ for i = 1:data_size
 end
 
 
+%% %%%% POSE & VELOCITY %%%% :  Save MdRQA Results
+positionResults = struct2table(pose_MDRQA_results);
+positionResults = positionResults(:, {'ID', 'usable_percent', 'recpercent'});
+positionResults = renamevars(positionResults, ['usable_percent', 'recpercent'], ['pos_usable', 'pos_recurrence'])
+velocityResults = struct2table(velocity_MDRQA_results);
+velocityResults = velocityResults(:, {'ID', 'usable_percent', 'recpercent'});
+
+writetable(positionResults, strcat(outputPath, "position_results.csv"))
+writetable(velocityResults, strcat(outputPath, "velocity_results.csv"))
 
 
