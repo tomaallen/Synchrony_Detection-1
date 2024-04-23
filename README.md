@@ -55,16 +55,16 @@ Run the script and wait for the results to be saved.
 The combined analysis script does two things
 1. Copies the head/face csv file to the pose output folder
 1. Generates a combined json file in the pose output folder, with id-assigned skeletons
-1. Performs an initial data quality check, generating a file indicating which key-points are detected in each frame
+1. Performs an initial data quality check, generating a csv file indicating which key-points are detected in each frame
 
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\synchrony_analysis` <br><br>
 - `python combined_analysis.py`
 
-Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv. A basic summary of video quality for each recording can be found in {settings.FOLDER}\analysis_info\data_quality.csv.
+Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv. A basic summary of video quality for each recording can be found in {settings.FOLDER}\analysis_info\data_quality.csv. The initial data quality check results are saved in {settings.FOLDER}\analysis_info\frame_checks\.
 
-**Before running any models: Data Quality Check**
+### Before running any models: Data Quality Check
 - Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames
 	- This is crucial in selecting the best camera angle from each session
 	- If you do not have multiple session/timepoints, make get_tp() return '1' for all videos
@@ -97,6 +97,7 @@ Pose Synchrony Model 1 data consists of 4 metrics:
 - `python run_model1.py {your_video_fps}`
 
 ### Implementation:
+TODO: 
 A data quality check is performed automatically to select the best cameras at each timepoint. For model 1, we run a data quality check for each pair for key-points used in angle calculation
 
 ## 3.2. Model 2 - MdRQA
