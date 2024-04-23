@@ -46,7 +46,8 @@ chardet
 filterpy
 
 # for MdRQA analysis
-multiSyncPy
+# multiSyncPy # for python version
+matlabengine # for matlab version
 
 
 

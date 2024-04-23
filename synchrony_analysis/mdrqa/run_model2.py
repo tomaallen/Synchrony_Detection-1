@@ -12,6 +12,8 @@ from json2csv import read_json
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 import settings
 
+import matlab.engine
+
 
 # %%
 if __name__ == '__main__':
@@ -84,9 +86,15 @@ if __name__ == '__main__':
 			index=False
 			)
 
-	# TODO: call MATLAB script with fps, input and output folder as args
-	# TODO: check that blank cells are read as nan by matlab
-	# TODO: setup dependencies for matlab in the matlab script/requirements.txt/README
+	eng = matlab.engine.start_matlab()
+	eng.cd(os.getcwd())
+	results = eng.run_mdrqa(
+		str(settings.MODEL2_FOLDER) + "_" + args.fps + "fps" + "\\matlab_inputs\\", # input folder
+		str(settings.MODEL2_FOLDER) + "_" + args.fps + "fps", # output folder
+		int(args.fps), # fps
+		35, # usability threshold
+		100, # max lag
+		10 # max embedding dimensions
+	)
+	print(results)
 
-
-# %%

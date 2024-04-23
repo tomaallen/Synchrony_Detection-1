@@ -20,10 +20,15 @@
 	- drag and drop the models folder into the unzipped openpose folder - this adds additional files to the existing models folder
 1. Copy the folders bin, include, lib and models from your openpose folder to Synchrony_Detection\pose_detection
 
+Model 2 specific:
+- Download and install MATLAB 2021b
+	- This older version of MATLAB is required for matlab engine to be compatible with python 3.7
+	- Install the 'Image Processing Toolbox' and 'Statistics and Machine Learning Toolbox' when asked
+
 
 ## Preparation 
 ### Naming Constraint
-Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session. This is implemented in synchrony_analysis\combined_analysis.py.
+Naming of PCI videos should *include participant numbers and time point at the least* in order to select the best camera angle for each session/timepoint. This is implemented in synchrony_analysis\combined_analysis.py and synchrony_analysis\data_quality_check.py
 
 ### Specifying folder location
 Videos should be stored in a single flat folder. This can be achieved by using preprocess.py if needed. <br>
@@ -38,7 +43,7 @@ Open an anaconda terminal and type:
 Run the script and wait for the results to be saved.
 
 ## 2. Reaching Detection
-### Notice that this section can run in parallel with section 1.
+Notice that this section can run in parallel with section 1.
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\pose_detection\src` <br><br>
@@ -50,6 +55,7 @@ Run the script and wait for the results to be saved.
 The combined analysis script does two things
 1. Copies the head/face csv file to the pose output folder
 1. Generates a combined json file in the pose output folder, with id-assigned skeletons
+1. Performs an initial data quality check, generating a file indicating which key-points are detected in each frame
 
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
@@ -58,7 +64,7 @@ Open a new anaconda prompt and type:
 
 Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv. A basic summary of video quality for each recording can be found in {settings.FOLDER}\analysis_info\data_quality.csv.
 
-**Before running any models:**
+**Before running any models: Data Quality Check**
 - Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames (or Synapse metadata)
 	- This is crucial in selecting the best camera angle from each session
 	- If you do not have multiple timepoints, make get_tp() return '1' for all videos
@@ -67,6 +73,11 @@ Information about whether each step of analysis has run can be found in {setting
 - The best cameras from each session are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
 
 ## 3.1. Model 1 - Cross-correlations
+
+### Method:
+TODO:
+
+### Metrics:
 Pose Synchrony Model 1 data consists of 4 metrics:
 
 - Infant and Mother Initiated Interactions are calculated as the normalized number of mother initiations per unit time (ratio between no. mother initiation / length of the interaction). It is calculated like so:
@@ -80,76 +91,54 @@ Pose Synchrony Model 1 data consists of 4 metrics:
 
 - Synchrony Stability (intensity) = normalized correlation intensity (ratio between mean lag variance  / length of the interaction). The correlation intensity is defined as the variance in the peak lag, where the peak lag is calculated for each window.
 
-To run model 1:
+### Run Model 1:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\synchrony_analysis\cross_correlations` <br><br>
 - `python run_model1.py {your_video_fps}`
 
+### Implementation:
+A data quality check is performed automatically to select the best cameras at each timepoint. For model 1, we run a data quality check for each pair for key-points used in angle calculation
+
 ## 3.2. Model 2 - MdRQA
 
-For Model 2, a Multi-dimensional Recurrence Quantification Analysis (MdRQA - Wallot, Roepstorff and Monster, 2016) approach has been implemented. Whilst model 1 considers linear relationships between mother and infant pose signals, MdRQA offers a complementary approach by taking into account non-linear contingencies between maternal and infant pose and movement. MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time. The key concept of MdRQA is to quantify patterns of recurrence which are related to the dynamic characteristics of a multivariate system. MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. The basis of the RQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted. We focus our analysis on nose and neck keypoints, as we consider these important indicators of adult-infant engagement and dynamics.
+### Method:
+For Model 2, a Multi-dimensional Recurrence Quantification Analysis (MdRQA - Wallot, Roepstorff and Monster, 2016) approach has been implemented. MdRQA is a multivariate extension of simple RQA, which is an analysis technique that was developed to characterize the behavior of time-series that are the result of multiple interdependent variables, potentially exhibiting nonlinear behavior over time. Whilst model 1 considers linear relationships between mother and infant pose signals, MdRQA offers a complementary approach by taking into account non-linear contingencies between maternal and infant pose and movement. MdRQA is a recurrence-based analysis technique to gauge the coordination pattern of multiple variables over time and quantify the dynamic characteristics of a multivariate system. The basis of the MdRQA approach is phase-space reconstruction through time-delayed embedding. A phase-space is a space in which all possible states of a system under study can be charted.
 
 Wallot, S., Roepstorff, A., & Mønster, D. (2016). Multidimensional Recurrence Quantification Analysis (MdRQA) for the analysis of multidimensional time-series: A software implementation in MATLAB and its application to group-level data in joint action. Frontiers in psychology, 7, 224211. https://doi.org/10.3389/fpsyg.2016.01835 <br>
 
-## TO CHANGE
-## Part One: Python code to produce MRQA analysis inputs
-This section uses as input the .json combined files produces in the previous modules. <br>
-### Code description: <br>
-**main_discarded_frames.py** <br>  
-This script takes as inputs the .json combined file containing info about mom's and baby's faces and bodies. <br>
-It checks which frames are ok to work with and which are not for each dataset following this criteria: <br>
-- a frame should contain at least two people <br>
-- there sohuld be a couple mom-baby in the frame <br>
-- mom and baby selected keypoints must score a selected confidence level <br>
-<br>
-The scipt discarded the frames that are not good and outputs an excel file for each dataset containing the following information:<br>
-- total number of frames <br>
-- how many good frames <br>
-- how many bad frames <br><br>
-*This is used as preliminary analysis.* <br><br>
+### Metrics:
+In our application of MdRQA, we focus our analysis on nose and neck key-points, as we consider these important indicators of adult-infant engagement and dynamics. Two key metrics are generated by this analysis:
 
-**main_input_data_process.py** <br>
-This script produces an excel file for each dataset that is going to be the input of the MRQA. <br>
-Each excel file row represents a video frame and the columns are the selected kwypoints x and y coordinates for (i.e. Neck and Nose) for both mom and baby. <br>
-If the frames is a bad one (does not fit the criteria previously explained) a line of NaNs is displayed. <br>
-<br>
-**functions.py** <br>
-This file contains all the functions to run the two main scripts. <br>
-<br>
-### Run the code 
-**Preliminary analysis for your dataset:**
-- open the script *python main_discarded_frames.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored and change the **workbook** parameters with the name you want to assign to the excel file <br><br>
-- `cd pathToYourFolder`<br><br>
-- `python main_discarded_frames.py` <br><br>
+1. Position recurrence - recurrence in the x-y positions of mother and infant key-points in the video
+1. Velocity recurrence - recurrence in the velocities of mother and infant key-points in the video
 
-**MRQA input preparation:**
-- open the script *python main_input_data_process.py* and change the **rootdir** parameter with the path to the folder where all the datasets are stored.<br><br>
-- `cd pathToYourFolder`<br><br>
-- `python main_discarded_frames.py` <br><br>
+### Run Model 2:
+- `conda activate synchrony_detection` <br><br>
+- `cd {your path}\Synchrony_Detection\synchrony_analysis\mdrqa` <br><br>
+- `python run_model2.py {your_video_fps}` <br><br>
 
-### Results  
-The *python main_discarded_frames.py* script produces one Excel file with the results of all the datasets analyzed.<br>
-Each row of the file contains the total amount of frames, the # of good frames, and the # of bad frames of the analyzed dataset. <br> 
-<br>
-The *python main_discarded_frames.py* script produces one Excel file for each dataset.<br>
-Each row of the file contains the x and y coordinates of the selected key points (for both mom and by) in a specific frame.
+NOTE: participant and timepoint are currently not provided in the MdRQA output by default, just filename.
 
-
-## Part two: Matlab code to run the MRQA analysis ###
-
+### Implementation:
+TODO: Model 2 runs in three steps:
+1. A data quality check is performed for each video based upon the number of frames in which mother and infant nose and neck are detected. The best video at each timepoint is selected.
+1. Using the results from the data quality check - discard bad frames
+1. mdrqa
 
 
 ## 3.3 Model 3 - Graph Networks
 
-
-## Model Overview
+## Method:
 Model 3 uses the concept of transfer entropy as a statistical metric to create a connectivity network between the baby and mom’s key point velocities. <br>
 Transfer entropy determines the amount of information (asymmetric) transferred between two processes.  Afterwards, the density and strength metrics are extracted, based on graph theory, to obtain a quantitative measure of the network architecture. <br>
 These metrics will give an idea of how many and how solid the connections are between different key points on average. <br>
 The model focuses on the nose, neck, right wrist, right elbow, left wrist, and left elbow key points, since they contain the most significant and reliable information for the analysis. <br>
 Model 3 data input are the JSON files retrieved from the head and body detection (points 1, 2 and 3.0). <br>
 
-## How to run the code
+## Metrics:
+TODO:
+
+## Run Model 3:
 Navigate inside the folder synchrony_analysis\graph_network:
 - `cd “C:\your path to\synchrony_analysis\graph_network”` <br><br>
 Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
