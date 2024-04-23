@@ -43,7 +43,7 @@ Open an anaconda terminal and type:
 Run the script and wait for the results to be saved.
 
 ## 2. Reaching Detection
-Notice that this section can run in parallel with section 1.
+*Notice that this section can run in parallel with section 1.*
 Open a new anaconda prompt and type:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\pose_detection\src` <br><br>
@@ -65,12 +65,12 @@ Open a new anaconda prompt and type:
 Information about whether each step of analysis has run can be found in {settings.FOLDER}\analysis_info\analysis_info.csv. A basic summary of video quality for each recording can be found in {settings.FOLDER}\analysis_info\data_quality.csv.
 
 **Before running any models: Data Quality Check**
-- Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames (or Synapse metadata)
+- Edit get_ppt() and get_tp() in data_quality_check.py to extract participant id and timepoint from your filenames
 	- This is crucial in selecting the best camera angle from each session
-	- If you do not have multiple timepoints, make get_tp() return '1' for all videos
+	- If you do not have multiple session/timepoints, make get_tp() return '1' for all videos
 - Each model has a different data quality check depending on the model parameters and which key-points are utilised
-	- All are implemented with data_quality_check() in data_quality_check.py
-- The best cameras from each session are listed in {settings.FOLDER}\analysis_info\best_cameras.csv
+	- The data quality check for models 1 and 2 are implemented with using synchrony_analysis\data_quality_check.py
+- The best quality cameras from each session are listed in {settings.FOLDER}\analysis_info\best_cameras.csv. Analysis will be run on these cameras only.
 
 ## 3.1. Model 1 - Cross-correlations
 
