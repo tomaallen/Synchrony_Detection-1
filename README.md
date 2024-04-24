@@ -147,18 +147,13 @@ Model 3 produces two directional metrics: strength and density. Both mother-to-i
 1. Density - the proportion of connections above threshold in the pose graph network
 
 ## Run Model 3:
-- `cd “{your path}\synchrony_analysis\graph_network”` <br><br>
-Launch transfer_entropy_connectivity_network.py script by typing the root directory path (where the JSON files have been saved, to be used as inputs), the base directory path (where you want to save the output of model3 analysis) and specifying the recordings fps: <br>
-i.e.: <br>
+- `cd {your path}\synchrony_analysis\graph_network` <br><br>
+- `python run_model3.py {your fps}` <br><br>
 
-- `python run_model3.py “C:\your\root\directory\” “C:\your\base\path” 30` <br><br>
-Since the process is completely automatised and will run over all the participants' folders that have to be analysed, it is fundamental to have a maximum of 30 participant folders (each of them will have 2/3 recordings) inside the root directory. <br>
-Too many participant folders inside the root directory will exponentially increase the computational time due to the elevated number of permutation sets created (explained in detail in the Scripts and Output Explanation section). <br>
-If more than 30 participants have to be analysed, split the analysis in different root folders containing <30 participants. <br>
+ ## Implementation Notes
+Model 3 does not currently use the data quality check to select the best camera angle, but uses an epoch-by-epoch check instead. Results can be mean averaged for each participant/timepoint in post-processing. The script automatically separates the data into batches of size n - this step is required for running permutations. We recommend manually calling main() in run_model3.py for the last batch if this batch contains fewer than 90 videos.
 
- ## Scripts and Output Explanation
-
-The main Model 3 script is  transfer_entropy_connectivity_network.py: it can be divided into 3 sections for an easier analysis: <br>
+The main Model 3 script is run_model3.py and it can be divided into 3 sections for an easier analysis: <br>
 ### 1.	Epoch Check – retrieves the number of good epochs keeping in mind that:
 
 good frame = frame containing mom-baby and pose detections with an acceptable confidence score <br>
@@ -188,7 +183,7 @@ Folders called baby-mom_te and mom-baby_te are automatically created, containing
 Fig. 1
 
 #### 2.3
-Normal distributions and P-values are built. <br>
+Normal distributions and P-values are built for each batch. Batches are automatically assigned by the script. <br>
 Permutation sets  are created using the Partner shuffling technique (one permutation set contains the transfer entropy adjacency matrix of a babyN-momN  couple + the transfer entropy adjacency matrices of all the remaining combinations of couples not containing babyN-momN). <br>
 
 The random distribution is now evaluated using the mean and standard deviation of the permutation sets. P-values can now be computed. <br>
@@ -201,7 +196,7 @@ baby-mom_pvalues and mom-baby_pvalues folders are also created containing P-valu
 For each participant file, 3 graphs (for the 3 epochs contained in the .txt file) are built and the graph metrics of Strength and Density are computed. <br>
 In each graph the body key-points represent the graph nodes and the connectivity values (weighted graph) are the graph edges.
 All the matrices are not symmetrical but directional. <br>
-The final outputs are two .txt files (GraphMetrics_baby-mom and GraphMetrics_mom-baby) containing the Density and Strength values for each epoch for each participant couple.
+The final outputs are two .txt/.csv files (GraphMetrics_baby-mom and GraphMetrics_mom-baby) containing the Density and Strength values for each epoch for each participant couple.
 
 
 
