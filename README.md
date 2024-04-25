@@ -118,7 +118,7 @@ In our application of MdRQA, we focus our analysis on nose and neck key-points, 
 ### Run Model 2:
 - `conda activate synchrony_detection` <br><br>
 - `cd {your path}\Synchrony_Detection\synchrony_analysis\mdrqa` <br><br>
-- `python run_model2.py {your_video_fps}` <br><br>
+- `python run_model2.py {your_video_fps}` e.g. `python run_model2.py 30` <br><br>
 
 NOTE: participant and timepoint are currently not provided in the MdRQA output by default, just filename.
 
@@ -148,7 +148,7 @@ Model 3 produces two directional metrics: strength and density. Both mother-to-i
 
 ## Run Model 3:
 - `cd {your path}\synchrony_analysis\graph_network` <br><br>
-- `python run_model3.py {your fps}` <br><br>
+- `python run_model3.py {your_video_fps}` e.g. `python run_model3.py 30` <br><br>
 
  ## Implementation Notes
 Model 3 does not currently use the data quality check to select the best camera angle, but uses an epoch-by-epoch check instead. Results can be mean averaged for each participant/timepoint in post-processing. The script automatically separates the data into batches of size n - this step is required for running permutations. We recommend manually calling main() in run_model3.py for the last batch if this batch contains fewer than 90 videos.
