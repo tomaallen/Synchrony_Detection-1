@@ -16,4 +16,5 @@ pose_detection/models/
 pose_detection/include/
 
 # BR only code specific to Tom's work
-synchrony_analysis/run_model1_BR.py
+synchrony_analysis/cross_correlations/run_model1_json.py
+synchrony_analysis/frame_check_only_json.py

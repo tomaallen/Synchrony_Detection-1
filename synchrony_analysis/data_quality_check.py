@@ -13,11 +13,11 @@ from tqdm import tqdm
 
 
 def get_ppt(filename: str):
-    return re.search(r'PID\d+', filename)[0] # XXX: edit this
+    return re.search(r'\d{8}', filename)[0] # XXX: edit this, BR: re.search(r'PID\d+', filename)[0]
 
 
 def get_tp(filename: str): # requires manifest
-    return re.search(r'timepoint\d+', filename)[0] # XXX: edit this
+    return re.search(r'\d+[Mm]', filename)[0] # XXX: edit this, BR: re.search(r'timepoint\d+', filename)[0]
 
 
 def calc_quality_score(frame_check, checks):
@@ -32,11 +32,11 @@ def calc_quality_score(frame_check, checks):
     # perfect_frames = np.array(confident_frames).all(axis=0) # perfect frames are those which meet all check criteria
     quality_score = np.mean(np.array(confident_frames))
 
-    try:
-        ppt = get_ppt(frame_check) # get participant from filename
-        tp = get_tp(frame_check) # get timepoint from filename
-    except:
-        raise Exception('Please edit get_ppt() and get_tp() functions in data_quality_check.py to extract participant id and timepoint from filenames')
+    # try:
+    ppt = get_ppt(frame_check) # get participant from filename
+    tp = get_tp(frame_check) # get timepoint from filename
+    # except:
+    #     raise Exception('Please edit get_ppt() and get_tp() functions in data_quality_check.py to extract participant id and timepoint from filenames')
 
     return [os.path.splitext(frame_check)[0], ppt, tp, quality_score]
 

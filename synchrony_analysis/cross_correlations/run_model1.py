@@ -125,8 +125,8 @@ if __name__ == '__main__':
                             help='video fps, same for all videos')
     my_parser.add_argument('--plot_off',
                             help='create plots or not - otherwise just make segmented analysis json',
-                            default=True,
-                            action='store_false')
+                            default=False,
+                            action='store_true')
 
     # Execute the parse_args() method
     args = my_parser.parse_args()
