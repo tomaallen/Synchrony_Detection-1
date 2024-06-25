@@ -208,6 +208,7 @@ def analyze_velocities(baby_velocities, mom_velocities, file_name, transfer_e_pa
                 # print("\t".join(map(str, row)))     
 
             te_list_of_matrices.append(matrix_te) # append a new matrix for each epoch
+            # print('Transfer entropies calculated successfully')
 
         # Create a new txt file containing all the matrices for each epoch
         write_matrices_to_file(transfer_e_path + "\\" + str(file_name) + ".txt", te_list_of_matrices)    # EDIT this with the path where you want to save the matrices
@@ -409,7 +410,7 @@ def create_subfolder(input_folder, output_folder):
     for filename in os.listdir(input_folder):
         if filename.endswith(".txt"):
             # Extract participant name from the filename
-            participant_name = filename.split("-PD-combined_output")[0]
+            participant_name = filename.lower().split("-PD-combined_output".lower())[0]
 
             # Create or use existing subfolder with participant_name
             subfolder_path = os.path.join(output_folder, participant_name)

@@ -37,8 +37,8 @@ if __name__ == '__main__':
 	print('Data quality check:')
 	checks = [['Nose', 'Neck']]
 	camera_scores, best_cams = get_best_cams(checks)
-	camera_scores.to_csv(settings.ANALYSIS_FOLDER / "camera_scores_model1.csv")
-	best_cams.to_csv(str(settings.BEST_CAMERAS) + "_model1.csv")
+	camera_scores.to_csv(settings.ANALYSIS_FOLDER / "camera_scores_model2.csv")
+	best_cams.to_csv(str(settings.BEST_CAMERAS) + "_model2.csv")
 	best_cam_list = list(zip(best_cams.Filename, best_cams.ppt, best_cams.tp))
 
 	# make matlab inputs directory

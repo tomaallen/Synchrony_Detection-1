@@ -75,17 +75,22 @@ def comb_analysis(file, data_quality):
         ai_dyad, confident = check_ppl_in_frames(dict_initial, conf_threshold=0.3)
         frame_check = pd.DataFrame([[x] + list(y) for x, y in zip(ai_dyad, confident)],
                         columns = ['DyadPresent'] + list(constants.KEYPOINTS_DICT.values()))
-        frame_check.to_csv(settings.FRAME_CHECKS / (vid + ".csv"))
-        
-        # write data quality summary file
-        with open(data_quality, 'a', newline="") as f:
-            write = csv.writer(f)
-            write.writerows([[vid,
-                            combined_json_path,
-                            len(dict_initial), # total frames
-                            np.mean(ai_dyad)]]) # proportion of frames where mother and infant are both detected                    
+        frame_check.to_csv(settings.FRAME_CHECKS / (vid + ".csv"))                   
 
-    return [vid, face_attempted, face_completed, pose_attempted, pose_completed, csv_copied, json_combined]
+    return [[
+        vid, 
+        face_attempted, 
+        face_completed, 
+        pose_attempted, 
+        pose_completed, 
+        csv_copied, 
+        json_combined
+        ],[[
+            vid, 
+            combined_json_path, 
+            len(dict_initial), 
+            np.mean(ai_dyad)
+            ]]]
 
 
 
@@ -121,10 +126,16 @@ if __name__ == '__main__':
     results = list(pool.starmap(comb_analysis, tqdm(params, total=len(params))))
 
     # write analysis info to csv file - which steps ran successfully for each video
-    for result in results:
+    for result, data_q in results:
         with open(analysis_info, 'a', newline="") as f:
             write = csv.writer(f)
             write.writerows([result])
+        
+        # write data quality summary file
+        with open(data_quality, 'a', newline="") as f:
+            write = csv.writer(f)
+            write.writerows(data_q) # proportion of frames where mother and infant are both detected 
+
         
     end = time.time()
     print('Runtime: {}sec'.format(round(end - start)))

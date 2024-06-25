@@ -5,7 +5,7 @@
 
 function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RADIUS_THRESHOLD, MAX_LAG, MAX_EMBED)
 
-    % outputPath is the output file for results and contains the 
+    % dataPath is the output folder for results and contains the 
     % matlab_inputs folder
     % fps is video frames per second as an integer.
     % usability threshold, max lag and max embed are mdrqa parameters
@@ -17,7 +17,7 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
     
     % test variables
     % inputPath = 'D:\KHULA\pose_synchrony\mdrqa_30fps\matlab_inputs\';
-    % outputPath = 'D:\KHULA\pose_synchrony\mdrqa_30fps\mdrqa_results.csv';
+    % outputPath = 'D:\KHULA\pose_synchrony\mdrqa_30fps\';
     % fps = 30;
     % USABILITY_THRESHOLD = 35;
     % RADIUS_THRESHOLD = 0.3;
@@ -36,18 +36,26 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
     dirStruct = dir(pathPattern);
     filenames_list = {dirStruct(:).name}; % actually a cell array
     
+    % SavGol smoothing parameters
+    window_size = fps * 3; % data is smoothed every x frames
+
+    % Velocity step size
+    step_size = 2; % every other frame instantaneous velocity
+    
     
     %% Loading pose data from excel files and storing in structure
     
-    % addpath 'X:\LEAP_PCI\Singapore_PCI\Pose_RQA\BRAINRISE_PCI\Matlab Input' %
-    % need to add this?
+    close all
     
     data_size = length(filenames_list);
     
     pose_coordinates_all(data_size) = struct; % holds all the pose coordinates raw data
+    pose_velocities_all(length(pose_coordinates_all)) = struct; % storing all the raw velocities data, calculated from the smoothened pose data
+    pose_RQA_parameters(data_size) = struct; %holds all the RQA parameters for pose
     
-    for i = 1:length(filenames_list)
+    for i = 1:data_size
         
+    % correct filenaming
         current_filename = strcat(inputPath, filenames_list{i});
         disp(current_filename);
     
@@ -68,31 +76,18 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
         %     pose_coordinates_current(any(isnan(pose_coordinates_current),2),:) = [];
         %     pose_coordinates_all(i).data_withoutnans = pose_coordinates_current;
         % end
+
     
-    end
-    
-    
-    %% Smoothing pose data using different techniques, but sgolay works best so far
-    
-    window_size = fps * 3; % data is smoothed every x frames
-    
-    for i = 1:data_size
-    %     pose_coordinates_all(i).smooth_data_movmean = smoothdata(pose_coordinates_all(i).data, "movmean",window_size,"omitnan");
-    %     pose_coordinates_all(i).smooth_data_gaussian = smoothdata(pose_coordinates_all(i).data, "gaussian",window_size,"omitnan");
+    % Smoothing pose data using different techniques, but sgolay works best so far
+        % pose_coordinates_all(i).smooth_data_movmean = smoothdata(pose_coordinates_all(i).data, "movmean",window_size,"omitnan");
+        % pose_coordinates_all(i).smooth_data_gaussian = smoothdata(pose_coordinates_all(i).data, "gaussian",window_size,"omitnan");
         if(iscell(pose_coordinates_all(i).data)) 
             pose_coordinates_all(i).data = str2double(pose_coordinates_all(i).data); 
         end
         pose_coordinates_all(i).smooth_data_sgolay = smoothdata(pose_coordinates_all(i).data, "sgolay",window_size,"omitnan");
         
-    end
     
-    %% Calculating velocities of neck and nose (mum and baby)
-    
-    step_size = 2; % every other frame instantaneous velocity
-    
-    pose_velocities_all(length(pose_coordinates_all)) = struct; % storing all the raw velocities data, calculated from the smoothened pose data
-    
-    for i = 1:length(pose_coordinates_all)
+    % Calculating velocities of neck and nose (mum and baby)
         temp_data = pose_coordinates_all(i).smooth_data_sgolay;
     
         k = 1;
@@ -113,18 +108,10 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
     
             k = k+1;
         end
-    end
     
     
     
-    %% %%%% POSE %%%% : getting the best possible delay and embedding paramaters for the subjects
-    
-    close all
-    
-    pose_RQA_parameters(data_size) = struct; %holds all the RQA parameters for pose
-    
-    for i = 1:length(pose_coordinates_all)
-         
+    % %%%% POSE %%%% : getting the best possible delay and embedding paramaters for the subjects             
          pose_RQA_parameters(i).ID = pose_coordinates_all(i).ID;
     
          dyadic_pose_data = pose_coordinates_all(i).smooth_data_sgolay;
@@ -136,13 +123,9 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
          % embedding dimension estimation
          [pose_RQA_parameters(i).fnnpercent,  pose_RQA_parameters(i).embeddingDimension] = mdFnn(dyadic_pose_data, round(pose_RQA_parameters(i).delay ),'maxEmb', MAX_EMBED);
     
-    end
     
-    
-    %% %%%% POSE %%%% : choosing the embed parameter for the dyad
-    
-    for i=1:length(pose_coordinates_all)
-    
+    % %%%% POSE %%%% : choosing the embed parameter for the dyad
+
         [min_fnn, min_fnn_embed] = min(pose_RQA_parameters(i).fnnpercent);
         pose_RQA_parameters(i).embed_dyad = min(min_fnn_embed);
     
@@ -273,6 +256,6 @@ function results = run_mdrqa(inputPath, outputPath, fps, USABILITY_THRESHOLD, RA
     velocityResults = renamevars(velocityResults, {'recpercent'}, {'vel_recurrence'});
     
     results = join(positionResults, velocityResults);
-    writetable(results, strcat(outputPath));
+    writetable(results, strcat(outputPath, "\mdrqa_results.csv"));
 
 

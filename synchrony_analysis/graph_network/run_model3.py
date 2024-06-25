@@ -18,6 +18,7 @@ import constants
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 import settings
 
+
 def read_graph_net_txt(file_path):
     # Define a list to store nested data
     data_nested = []
@@ -173,7 +174,7 @@ if __name__ == "__main__":
     parser.add_argument("fps", type=int, help="Frames per second")
     parser.add_argument("--rootdir", type=str, default=settings.FOLDER, help="Root directory of data")
     parser.add_argument("--base_path", type=str, default=settings.MODEL3_FOLDER, help="Base path")
-    parser.add_argument("--batch_size", type=int, default=90, help="number of json files analysed at a time (permutations)")
+    parser.add_argument("--batch_size", type=int, default=50, help="number of json files analysed at a time (permutations)")
 
     args = parser.parse_args()
 
@@ -181,7 +182,7 @@ if __name__ == "__main__":
     json_files = []
     for root, dirs, files in os.walk(args.rootdir):
         for file in files:
-            if file.endswith(constants.JSON_COMBINED_FILE):
+            if file.endswith(str.lower(constants.JSON_COMBINED_FILE)):
                 json_files.append(os.path.join(root, file))
 
     json_batches = [json_files[i:i+args.batch_size] for i in range(0, len(json_files), args.batch_size)]
@@ -208,7 +209,7 @@ if __name__ == "__main__":
                 shutil.copy(file, new_file)
         
         print(f'Analysing batch {i+1}')
-        # main(input_folder, output_folder, args.fps)
+        main(str(input_folder), str(output_folder), args.fps)
 
     # automatically combine results - baby to mum
     print('Combining baby-to-mum results')
@@ -219,7 +220,7 @@ if __name__ == "__main__":
         pass
 
     # append all results
-    for result in glob(args.base_path + "\\*\\GraphMetrics_baby-mom.txt"):
+    for result in glob(str(args.base_path) + "\\*\\GraphMetrics_baby-mom.txt"):
         print(result)
         with open(result, 'r') as file:
             with open(results_path_bm, 'a') as combined_file:
@@ -234,14 +235,13 @@ if __name__ == "__main__":
         pass
 
     # append all results
-    for result in glob(args.base_path + "\\*\\GraphMetrics_mom-baby.txt"):
+    for result in glob(str(args.base_path) + "\\*\\GraphMetrics_mom-baby.txt"):
         print(result)
         with open(result, 'r') as file:
             with open(results_path_mb, 'a') as combined_file:
                 combined_file.write(file.read())
 
-    # TODO: read as csv instead and remove duplicates created by last batch dupes
-    # %% read graph network data
+    # read graph network data and drop duplicates caused by last batch padding
     graph_net_bm = read_graph_net_txt(results_path_bm)
     graph_net_bm.drop_duplicates(subset='filename').to_csv(os.path.splitext(results_path_bm)[0] + ".csv")
 
