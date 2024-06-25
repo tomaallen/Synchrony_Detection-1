@@ -56,16 +56,24 @@ def gather_results(txt_directory, output_path, length):
     for label_txt in tqdm(label_txts, total=len(label_txts)):
         label_df = pd.read_csv(label_txt, header=None, sep=" ")
         idx = int(label_txt.split(os.sep)[-1].split("_")[-1].split(".txt")[0]) - 1
-        bboxes_mom = label_df.loc[label_df[0] == 0]
-        bboxes_baby = label_df.loc[label_df[0] == 1]
+        bboxes_mom = label_df.loc[(label_df[0] == 0) & (label_df[1] < 0.5)] # mom bboxes on left
+        bboxes_baby_l = label_df.loc[(label_df[0] == 1) & (label_df[1] < 0.5)] # baby bboxes on left
+        bboxes_baby_r = label_df.loc[(label_df[0] == 1) & (label_df[1] >= 0.5)] # baby bboxes on right
 
         cx_mom, cy_mom, cx_baby, cy_baby = -1, -1, -1, -1
 
         if len(bboxes_mom):
-            _, x_float_mom, y_float_mom, _, _, _ = bboxes_mom.sort_values(5, ascending=False).iloc[0]
+            # if at least 1 mum box present - select highest confidence
+            _, x_float_mom, y_float_mom, _, _, _ = bboxes_mom.sort_values(5, ascending=False).iloc[0] # takes highest confidence
             cx_mom, cy_mom = x_float_mom, y_float_mom
-        if len(bboxes_baby):
-            _, x_float_baby, y_float_baby, _, _, _ = bboxes_baby.sort_values(5, ascending=False).iloc[0]
+        elif len(bboxes_baby_l):
+            # if no mum bbox present choose baby box with highest confidence
+            # on the left hand side of the screen as mum bbox
+            _, x_float_mom, y_float_mom, _, _, _ = bboxes_baby_l.sort_values(5, ascending=False).iloc[0] # takes highest confidence
+            cx_mom, cy_mom = x_float_mom, y_float_mom
+        if len(bboxes_baby_r):
+            # select baby box with highest confidence on the right hand side
+            _, x_float_baby, y_float_baby, _, _, _ = bboxes_baby_r.sort_values(5, ascending=False).iloc[0]
             cx_baby, cy_baby = x_float_baby, y_float_baby
 
         center_cords[idx] = cx_mom, cy_mom, cx_baby, cy_baby
