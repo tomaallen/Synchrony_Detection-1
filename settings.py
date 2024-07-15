@@ -23,7 +23,7 @@ from pathlib import Path
 #         video_info
 # ----------------------------------------------------------------------
 
-FOLDER = Path("D:\\KHULA\\pose_synchrony")  # XXX: edit this path
+FOLDER = Path("D:\\BRAINRISE\\keypoint_extraction\\feb24")  # XXX: edit this path
 HEAD_FOLDER = FOLDER / "head_output"
 POSE_FOLDER = FOLDER / "pose_output"
 ANALYSIS_FOLDER = FOLDER / "analysis_info"

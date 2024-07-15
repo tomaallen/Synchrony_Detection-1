@@ -62,20 +62,25 @@ def comb_analysis(file, data_quality):
         
         json_combined = os.path.exists(combined_json_path)
 
-        # initial data quality check
-        print('######### Running initial data quality check on: ' + os.path.basename(combined_json_path) + ' ######################')
-        f = open(combined_json_path)
-        dict_initial = json.load(f) # initial dictionary
-        f.close()
-        
-        # produce frame checks - whether each keypoint is present in each frame
-        # one csv file per video in settings.FRAMECHECKS folder
-        # ai_dyad = whether mum and baby are in the frame
-        # confident = which frames keypoint is above confidence threshold for mum and baby
-        ai_dyad, confident = check_ppl_in_frames(dict_initial, conf_threshold=0.3)
-        frame_check = pd.DataFrame([[x] + list(y) for x, y in zip(ai_dyad, confident)],
-                        columns = ['DyadPresent'] + list(constants.KEYPOINTS_DICT.values()))
-        frame_check.to_csv(settings.FRAME_CHECKS / (vid + ".csv"))                   
+        # run frame check if not run yet
+        frame_check_path = settings.FRAME_CHECKS / (vid + ".csv")
+
+        if not os.path.isfile(frame_check_path):
+
+            # initial data quality check
+            # print('######### Running initial data quality check on: ' + os.path.basename(combined_json_path) + ' ######################')
+            f = open(combined_json_path)
+            dict_initial = json.load(f) # initial dictionary
+            f.close()
+            
+            # produce frame checks - whether each keypoint is present in each frame
+            # one csv file per video in settings.FRAMECHECKS folder
+            # ai_dyad = whether mum and baby are in the frame
+            # confident = which frames keypoint is above confidence threshold for mum and baby
+            ai_dyad, confident = check_ppl_in_frames(dict_initial, conf_threshold=0.3)
+            frame_check = pd.DataFrame([[x] + list(y) for x, y in zip(ai_dyad, confident)],
+                            columns = ['DyadPresent'] + list(constants.KEYPOINTS_DICT.values()))
+            frame_check.to_csv(frame_check_path)
 
     return [[
         vid, 
@@ -101,8 +106,7 @@ if __name__ == '__main__':
 
     # reset info file
     analysis_info = settings.ANALYSIS_FOLDER / "analysis_info.csv"
-    if not os.path.isdir(settings.ANALYSIS_FOLDER): # make analysis info folder if does not exist
-        os.mkdir(settings.ANALYSIS_FOLDER)
+    os.makedirs(settings.ANALYSIS_FOLDER, exist_ok=True)
     with open(analysis_info, 'w', newline="") as f:
         write = csv.writer(f)
         write.writerows([['Filename','Face_attempted','Face_complete','Pose_attempted',
