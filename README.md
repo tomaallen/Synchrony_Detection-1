@@ -3,6 +3,11 @@
 
 This repository contains software to extract body key-points from videos of mother-infant interactions and compute synchrony metrics on the resultant time-series. Steps 1 and 2 of the pipeline extract key-points from the video data and assign them to either the mother or infant. Step 3 computes various synchrony metrics from the time-series of pose data. The pipeline is optimised to run on a flat folder structure of videos and is capable of automatically finding the best cameras for a given session or timepoint. To run the extraction and synchrony models, run steps 1, 2 and 3.0 before running your model(s) of choice.
 
+Note: the below files are BRAINRISE only code specific to Tom's work when combined json files were available as a standalone dataset
+- synchrony_analysis/cross_correlations/run_model1_json.py
+- synchrony_analysis/mdrqa/run_model2_json.py
+- synchrony_analysis/frame_check_only_json.py
+
 ## Installation
 1. Install Anaconda
 1. Download or clone the GitHub repository Synchrony_Detection
