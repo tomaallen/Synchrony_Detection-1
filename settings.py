@@ -23,7 +23,7 @@ from pathlib import Path
 #         video_info
 # ----------------------------------------------------------------------
 
-FOLDER = Path("D:\\BRAINRISE\\keypoint_extraction\\feb24")  # XXX: edit this path
+FOLDER = Path("D:\KHULA\\pose_synchrony")  # XXX: edit this path
 HEAD_FOLDER = FOLDER / "head_output"
 POSE_FOLDER = FOLDER / "pose_output"
 ANALYSIS_FOLDER = FOLDER / "analysis_info"
@@ -32,6 +32,7 @@ BEST_CAMERAS = ANALYSIS_FOLDER / "best_cameras"
 MODEL1_FOLDER = FOLDER / "cross_corr" # fps automatically appended to this name
 MODEL2_FOLDER = FOLDER / "mdrqa" # fps automatically appended to this name
 MODEL3_FOLDER = FOLDER / "graph_network"
+JSON_FOLDER = FOLDER / "json_files" # for json only analysis
 
 KEYPOINTS_DICT = {0: "Nose",
                   1: "Neck",
